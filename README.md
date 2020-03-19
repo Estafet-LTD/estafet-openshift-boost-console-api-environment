@@ -1,0 +1,1 @@
+# estafet-openshift-boost-console-api-environment
