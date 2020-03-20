@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.estafet.openshift.boost.console</groupId>
+	<artifactId>estafet-openshift-boost-console-api-environment</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>estafet-openshift-boost-console-api-environment</name>
+
+	<parent>
+		<groupId>com.estafet.openshift.boost</groupId>
+		<artifactId>estafet-openshift-boost-springboot-db</artifactId>
+		<version>1.0.5</version>
+	</parent>
+
+	<properties>
+		<microservice>console-build-api</microservice>
+		<entity.package>com.estafet.openshift.boost.console.api.environment.model</entity.package>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.openshift</groupId>
+			<artifactId>openshift-restclient-java</artifactId>
+			<version>8.0.0.Final</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>			
+		</dependency>	
+		<dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		</dependency>			
+		<dependency>
+			<groupId>com.estafet.openshift.boost</groupId>
+			<artifactId>estafet-openshift-boost-commons-lib</artifactId>
+			<version>0.0.5</version>
+		</dependency>		
+		<dependency>
+			<groupId>com.estafet.openshift.boost</groupId>
+			<artifactId>estafet-openshift-boost-messages-lib</artifactId>
+			<version>0.0.16</version>
+		</dependency>					
+	</dependencies>
+
+</project>
