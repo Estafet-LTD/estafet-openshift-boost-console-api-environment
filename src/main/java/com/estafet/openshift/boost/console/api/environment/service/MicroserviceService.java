@@ -47,10 +47,5 @@ public class MicroserviceService {
 		}
 		return envDAO.getEnv(env).getEnvironment().getEnvironmentApp(app);
 	}
-
-	
-	
-	
-
 	
 }
