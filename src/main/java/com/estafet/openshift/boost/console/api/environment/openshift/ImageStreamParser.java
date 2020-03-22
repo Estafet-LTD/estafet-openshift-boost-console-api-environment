@@ -31,6 +31,7 @@ public class ImageStreamParser {
 		return getShaByTag("latest");
 	}
 
+	@SuppressWarnings("unchecked")
 	public String getShaByTag(String tag) {
 		JSONObject status = (JSONObject) jo.get("status");
 		JSONArray tags = (JSONArray) status.get("tags");
@@ -46,6 +47,7 @@ public class ImageStreamParser {
 		throw new RuntimeException("Cannot find sha for tag - " + tag);
 	}
 
+	@SuppressWarnings("unchecked")
 	public String getTagBySha(String sha) {
 		JSONObject status = (JSONObject) jo.get("status");
 		JSONArray tags = (JSONArray) status.get("tags");
@@ -60,6 +62,7 @@ public class ImageStreamParser {
 		throw new RuntimeException("Cannot find sha for tag - " + sha);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean isShaMatch(String sha, JSONArray items) {
 		Iterator<JSONObject> itemsIterator = items.iterator();
 		while (itemsIterator.hasNext()) {

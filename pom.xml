@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>com.estafet.openshift.boost</groupId>
 			<artifactId>estafet-openshift-boost-messages-lib</artifactId>
-			<version>0.0.16</version>
+			<version>0.0.17</version>
 		</dependency>					
 	</dependencies>
 
