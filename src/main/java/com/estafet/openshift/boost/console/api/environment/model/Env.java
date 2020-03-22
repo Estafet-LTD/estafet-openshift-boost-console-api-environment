@@ -194,6 +194,7 @@ public class Env {
 					.setDeployedDate(app.getDeployedDate())
 					.setName(app.getName())
 					.setVersion(app.getVersion())
+					.setDeployed(app.isDeployed())
 					.build();
 			environment.addApp(envApp);
 		}
