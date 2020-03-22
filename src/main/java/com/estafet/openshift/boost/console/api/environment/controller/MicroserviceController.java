@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.estafet.openshift.boost.console.api.environment.service.MicroserviceService;
 import com.estafet.openshift.boost.messages.environments.Environment;
-import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @RestController
 public class MicroserviceController {
@@ -26,9 +25,9 @@ public class MicroserviceController {
 	}
 
 	@PostMapping("/environment/{env}/app/{app}/{action}")
-	public ResponseEntity<EnvironmentApp> doAction(@PathVariable String env, @PathVariable String app,
+	public ResponseEntity<Environment> doAction(@PathVariable String env, @PathVariable String app,
 			@PathVariable String action) {
-		return new ResponseEntity<EnvironmentApp>(microserviceService.doAction(env, app, action),
+		return new ResponseEntity<Environment>(microserviceService.doAction(env, app, action),
 				HttpStatus.OK);
 	}
 

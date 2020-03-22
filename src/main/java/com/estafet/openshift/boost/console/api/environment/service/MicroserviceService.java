@@ -10,7 +10,6 @@ import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.environments.Environment;
-import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Service
 public class MicroserviceService {
@@ -29,7 +28,7 @@ public class MicroserviceService {
 		return environments;
 	}
 
-	public EnvironmentApp doAction(String env, String app, String action) {
+	public Environment doAction(String env, String app, String action) {
 		if (env.equals("build")) {
 			if (action.equals("build")) {
 				client.executeBuildAllPipeline();
@@ -45,7 +44,7 @@ public class MicroserviceService {
 				client.executePromoteToLivePipeline();
 			}
 		}
-		return envDAO.getEnv(env).getEnvironment().getEnvironmentApp(app);
+		return envDAO.getEnv(env).getEnvironment();
 	}
 	
 }
