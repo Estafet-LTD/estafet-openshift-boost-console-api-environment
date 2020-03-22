@@ -99,9 +99,12 @@ public class Env {
 		this.apps = apps;
 	}
 
-	public Env update(Env buildEnv) {
-		if (changed(buildEnv)) {
-			for (App recentApp : buildEnv.getApps()) {
+	public Env update(Env other) {
+		if (changed(other)) {
+			displayName = other.displayName;
+			live = other.live;
+			tested = other.tested;
+			for (App recentApp : other.getApps()) {
 				App app = getApp(recentApp.getName());
 				if (app == null) {
 					addApp(recentApp);
@@ -133,6 +136,11 @@ public class Env {
 			if (buildEnv.live != null)
 				return false;
 		} else if (!live.equals(buildEnv.live))
+			return false;
+		if (displayName == null) {
+			if (buildEnv.displayName != null)
+				return false;
+		} else if (!displayName.equals(buildEnv.displayName))
 			return false;
 		if (name == null) {
 			if (buildEnv.name != null)
@@ -183,6 +191,8 @@ public class Env {
 				.setUpdatedDate(updatedDate)
 				.setLive(live)
 				.setName(name)
+				.setDisplayName(displayName)
+				.setTested(tested)
 				.build();
 		for (App app : apps) {
 			EnvironmentApp envApp = EnvironmentApp.builder()
