@@ -23,6 +23,9 @@ public class Env {
 	@Id
 	@Column(name = "ENV_ID", nullable = false)
 	private String name;
+	
+	@Column(name = "DISPLAY_NAME", nullable = false)
+	private String displayName;
 
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
@@ -46,6 +49,14 @@ public class Env {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	public String getUpdatedDate() {
@@ -191,10 +202,16 @@ public class Env {
 	public static class EnvBuilder {
 		
 		private String name;
+		private String displayName;
 		private Boolean live;
 		private Boolean tested;
 		private String next;
-		
+				
+		public EnvBuilder setDisplayName(String displayName) {
+			this.displayName = displayName;
+			return this;
+		}
+
 		public EnvBuilder setTested(Boolean tested) {
 			this.tested = tested;
 			return this;
@@ -218,6 +235,7 @@ public class Env {
 		public Env build() {
 			Env env = new Env();
 			env.setName(name);
+			env.setDisplayName(displayName);
 			env.setLive(live);
 			env.setNext(next);
 			env.setTested(tested);

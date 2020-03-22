@@ -101,6 +101,7 @@ public class EnvironmentService {
 	public Env createEnv(IProject project, String next) {
 		Env env = Env.builder()
 					.setName(envName(project))
+					.setDisplayName(project.getDisplayName())
 					.setNext(next)
 					.setTested(client.isEnvironmentTestPassed(project.getName()))
 					.build();
