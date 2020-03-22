@@ -31,7 +31,9 @@ public class DeploymentConfigParser {
 	@SuppressWarnings("unchecked")
 	public String getDeployedDate() {
 		JSONObject status = ((JSONObject) jo.get("status"));
+		if (status == null) return null;
 		JSONArray conditions = (JSONArray) status.get("conditions");
+		if (conditions == null) return null;
 		Iterator<JSONObject> itr = conditions.iterator();
 		while (itr.hasNext()) {
 			JSONObject condition = itr.next();
@@ -39,7 +41,7 @@ public class DeploymentConfigParser {
 				return (String) condition.get("lastUpdateTime");
 			}
 		}
-		throw new RuntimeException("cannot find deployed date");
+		return null;
 	}
 
 	public String getVersion() {
