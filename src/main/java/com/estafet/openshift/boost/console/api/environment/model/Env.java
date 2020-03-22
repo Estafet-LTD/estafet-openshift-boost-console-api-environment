@@ -142,11 +142,6 @@ public class Env {
 				return false;
 		} else if (!displayName.equals(buildEnv.displayName))
 			return false;
-		if (name == null) {
-			if (buildEnv.name != null)
-				return false;
-		} else if (!name.equals(buildEnv.name))
-			return false;
 		if (tested == null) {
 			if (buildEnv.tested != null)
 				return false;
