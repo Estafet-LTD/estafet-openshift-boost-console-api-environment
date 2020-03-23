@@ -33,7 +33,7 @@ public class App {
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
-	@Column(name = "TESTED", nullable = false)
+	@Column(name = "TESTED", nullable = true)
 	private Boolean tested;
 
 	@JsonIgnore

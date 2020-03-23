@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet author="Dennis (generated)" id="1584913647704-1">
+    <changeSet author="Dennis (generated)" id="1584992835689-1">
         <createTable tableName="app">
             <column name="app_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -9,9 +9,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="deployed_date" type="VARCHAR(255)"/>
-            <column name="tested" type="BOOL">
-                <constraints nullable="false"/>
-            </column>
+            <column name="tested" type="BOOL"/>
             <column name="updated_date" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -23,7 +21,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1584913647704-2">
+    <changeSet author="Dennis (generated)" id="1584992835689-2">
         <createTable tableName="env">
             <column name="env_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -39,16 +37,16 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1584913647704-3">
+    <changeSet author="Dennis (generated)" id="1584992835689-3">
         <addPrimaryKey columnNames="app_id" constraintName="app_pkey" tableName="app"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1584913647704-4">
+    <changeSet author="Dennis (generated)" id="1584992835689-4">
         <addPrimaryKey columnNames="env_id" constraintName="env_pkey" tableName="env"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1584913647704-5">
+    <changeSet author="Dennis (generated)" id="1584992835689-5">
         <addUniqueConstraint columnNames="env_id, app_id" constraintName="env_app_key" tableName="app"/>
     </changeSet>
-    <changeSet author="Dennis (generated)" id="1584913647704-6">
+    <changeSet author="Dennis (generated)" id="1584992835689-6">
         <addForeignKeyConstraint baseColumnNames="env_id" baseTableName="app" constraintName="app_to_env_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="env_id" referencedTableName="env"/>
     </changeSet>
 </databaseChangeLog>
