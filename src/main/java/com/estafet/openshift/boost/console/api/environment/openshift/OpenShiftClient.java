@@ -70,10 +70,9 @@ public class OpenShiftClient {
 	@SuppressWarnings("deprecation")
 	public boolean isEnvironmentTestPassed(String namespace) {
 		Span span = tracer.buildSpan("OpenShiftClient.isEnvironmentTestPassed").start();
-		try {
-			return Boolean.parseBoolean(
-					((IProject) getClient().get(ResourceKind.PROJECT, namespace)).getLabels()
-							.get("test-passed"));
+		try {			
+			span.setBaggageItem("namespace", namespace);
+			return Boolean.parseBoolean(getClient().get(ResourceKind.PROJECT, namespace).getLabels().get("test-passed"));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
