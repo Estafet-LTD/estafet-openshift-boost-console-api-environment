@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.estafet.openshift.boost.console.api.environment.util.ENV;
@@ -35,9 +36,17 @@ public class OpenShiftClient {
 
 	private IClient getClient() {
 		return new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT)
+				.usingToken(getToken())
+				.build();
+	}
+	
+	@Cacheable(cacheNames = { "token" })
+	public String getToken() {
+		IClient client = new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT)
 				.withUserName(ENV.OPENSHIFT_USER)
 				.withPassword(ENV.OPENSHIFT_PASSWORD)
 				.build();
+		return client.getAuthorizationContext().getToken();
 	}
 	
 	@SuppressWarnings("deprecation")
