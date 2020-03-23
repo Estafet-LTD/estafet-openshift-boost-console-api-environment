@@ -121,13 +121,13 @@ public class OpenShiftClient {
 	}
 
 	@SuppressWarnings("deprecation")
-	public List<IBuild> getBuilds() {
-		Span span = tracer.buildSpan("OpenShiftClient.getBuilds").start();
+	public List<IImageStream> getIImageStreams() {
+		Span span = tracer.buildSpan("OpenShiftClient.getIImageStreams").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
 			labels.put("type", "build");
-			return getClient().list(ResourceKind.BUILD, ENV.PRODUCT + "-cicd", labels);
+			return getClient().list(ResourceKind.BUILD_CONFIG, ENV.PRODUCT + "-build", labels);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -140,7 +140,26 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("OpenShiftClient.getImageStreams").start();
 		try {
 			span.setBaggageItem("namespace", namespace);
-			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, namespace);
+			Map<String, String> labels = new HashMap<String, String>();
+			labels.put("product", ENV.PRODUCT);
+			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, namespace, labels);
+			Map<String, IImageStream> result = new HashMap<String, IImageStream>();
+			for (IImageStream image : images) {
+				result.put(image.getName(), image);
+			}
+			return result;
+		} catch (RuntimeException e) {
+			throw handleException(span, e);
+		} finally {
+			span.finish();
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public Map<String, IImageStream> getCICDImageStreams() {
+		Span span = tracer.buildSpan("OpenShiftClient.getCICDImageStreams").start();
+		try {
+			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, ENV.PRODUCT + "-cicd");
 			Map<String, IImageStream> result = new HashMap<String, IImageStream>();
 			for (IImageStream image : images) {
 				result.put(image.getName(), image);

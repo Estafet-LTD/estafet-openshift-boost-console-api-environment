@@ -18,7 +18,6 @@ import com.estafet.openshift.boost.console.api.environment.model.AppFactory;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.environments.Environment;
-import com.openshift.restclient.model.IBuild;
 import com.openshift.restclient.model.IDeploymentConfig;
 import com.openshift.restclient.model.IImageStream;
 import com.openshift.restclient.model.IProject;
@@ -116,9 +115,9 @@ public class EnvironmentService {
 		Map<String, IDeploymentConfig> dcs = client.getDeploymentConfigs(namespace);
 		Map<String, IService> services = client.getServices(namespace);
 		Map<String, IImageStream> buildImages = client.getImageStreams(ENV.PRODUCT + "-build");
-		Map<String, IImageStream> cicdImages = client.getImageStreams(ENV.PRODUCT + "-cicd");
-		for (IBuild build : client.getBuilds()) {
-			String appName = appName(build);
+		Map<String, IImageStream> cicdImages = client.getCICDImageStreams();
+		for (IImageStream image : client.getIImageStreams()) {
+			String appName = image.getName();
 			try {
 				App app;
 				if (env.getName().equals("build")) {
@@ -138,10 +137,6 @@ public class EnvironmentService {
 	
 	private boolean isLive(String name) {
 		return client.getRoute().getServiceName().startsWith(name);
-	}
-	
-	private String appName(IBuild build) {
-		return build.getName().replaceAll("build\\-", "");
 	}
 	
 	private String envName(String namespace) {
