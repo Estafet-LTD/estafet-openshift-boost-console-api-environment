@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ import io.opentracing.tag.Tags;
 @Component
 public class OpenShiftClient {
 
+	private static final Logger log = LoggerFactory.getLogger(OpenShiftClient.class);
+	
 	@Autowired
 	private Tracer tracer;
 
@@ -48,10 +52,11 @@ public class OpenShiftClient {
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
+			labels.put("stage", "true");
 			List<IProject> projects = getClient().list(ResourceKind.PROJECT, labels);
 			Map<String, IProject> result = new HashMap<String, IProject>();
 			for (IProject project : projects) {
-				if (project.getLabels().get("stage").equals("true"))
+				log.info("project - " + project.getName());
 				result.put(project.getName(), project);
 			}
 			return result;
