@@ -106,7 +106,7 @@ public class EnvironmentService {
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
 					.setDisplayName(project.getLabels().get("display"))
-					.setNext(nextEnv.equals("prod") ? null : next)
+					.setNext(nextEnv.equals("prod") ? null : nextEnv)
 					.setTested(client.isEnvironmentTestPassed(project.getName()))
 					.build();
 		return addApps(env, project.getName());

@@ -33,9 +33,6 @@ public class App {
 	@Column(name = "UPDATED_DATE", nullable = false)
 	private String updatedDate;
 
-	@Column(name = "TESTED", nullable = true)
-	private Boolean tested;
-
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "ENV_ID", nullable = false, referencedColumnName = "ENV_ID", foreignKey = @ForeignKey(name = "APP_TO_ENV_FK"))
@@ -47,14 +44,6 @@ public class App {
 
 	public void setEnv(Env env) {
 		this.env = env;
-	}
-
-	public Boolean getTested() {
-		return tested;
-	}
-
-	public void setTested(Boolean tested) {
-		this.tested = tested;
 	}
 
 	public String getVersion() {
@@ -115,11 +104,6 @@ public class App {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (tested == null) {
-			if (other.tested != null)
-				return false;
-		} else if (!tested.equals(other.tested))
-			return false;
 		if (version == null) {
 			if (other.version != null)
 				return false;
@@ -131,7 +115,6 @@ public class App {
 	public void update(App recentApp) {
 		this.version = recentApp.version;
 		this.name = recentApp.name;
-		this.tested = recentApp.tested;
 		this.deployedDate = recentApp.deployedDate;
 		this.deployed = recentApp.deployed;
 		this.updatedDate = DateUtils.newDate();
@@ -178,7 +161,6 @@ public class App {
 		private String version;
 		private String deployedDate;
 		private boolean deployed;
-		private Boolean tested;
 		
 		public AppBuilder setName(String name) {
 			this.name = name;
@@ -200,17 +182,11 @@ public class App {
 			return this;
 		}
 		
-		public AppBuilder setTested(Boolean tested) {
-			this.tested = tested;
-			return this;
-		}
-		
 		public App build() {
 			App app = new App();
 			app.setDeployed(deployed);
 			app.setDeployedDate(deployedDate);
 			app.setName(name);
-			app.setTested(tested);
 			app.setUpdatedDate(DateUtils.newDate());
 			app.setVersion(version);
 			return app;
