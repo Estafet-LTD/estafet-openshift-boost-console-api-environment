@@ -81,8 +81,8 @@ public class EnvironmentService {
 		log.info("createEnv - " + namespace);
 		IProject project = projects.get(namespace);
 		String next = project.getLabels().get("next");
-		envs.add(createEnv(project, next));
 		if (!next.equals(ENV.PRODUCT + "-end")) {
+			envs.add(createEnv(project, next));
 			return createEnv(next, projects, envs);
 		} else if (namespace.equals(ENV.PRODUCT + "-prod")) {
 			envs.add(createProdEnv("green"));
@@ -104,9 +104,9 @@ public class EnvironmentService {
 
 	public Env createEnv(IProject project, String next) {
 		Env env = Env.builder()
-					.setName(envName(project))
-					.setDisplayName(project.getDisplayName())
-					.setNext(next)
+					.setName(envName(project.getName()))
+					.setDisplayName(project.getLabels().get("display"))
+					.setNext(envName(next))
 					.setTested(client.isEnvironmentTestPassed(project.getName()))
 					.build();
 		return addApps(env, project.getName());
@@ -144,8 +144,8 @@ public class EnvironmentService {
 		return build.getName().replaceAll("build\\-", "");
 	}
 	
-	private String envName(IProject project) {
-		return project.getName().replaceAll(Pattern.quote(ENV.PRODUCT) + "\\-", "");
+	private String envName(String namespace) {
+		return namespace.replaceAll(Pattern.quote(ENV.PRODUCT) + "\\-", "");
 	}
 
 }
