@@ -150,7 +150,13 @@ public class App {
 			return false;
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "App [name=" + name + ", version=" + version + ", deployedDate=" + deployedDate + ", deployed="
+				+ deployed + ", updatedDate=" + updatedDate + "]";
+	}
+
 	public static AppBuilder builder() {
 		return new AppBuilder();
 	}

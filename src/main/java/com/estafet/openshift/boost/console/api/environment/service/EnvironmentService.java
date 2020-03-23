@@ -122,13 +122,17 @@ public class EnvironmentService {
 			log.info("app - " + appName);
 			try {
 				App app;
+				IDeploymentConfig dc = dcs.get(appName);
+				IService service = services.get(appName);
 				if (env.getName().equals("build")) {
-					app = appFactory.getBuildApp(dcs.get(appName), services.get(appName), images.get(appName), cicdImages.get(appName));	
+					app = appFactory.getBuildApp(dc, service, images.get(appName), cicdImages.get(appName));	
 				} else {
-					app = appFactory.getApp(dcs.get(appName), services.get(appName));
+					app = appFactory.getApp(dc, service);
 				}
 				if (app != null) {
 					env.addApp(app);	
+				} else {
+					log.warn("could not construct app for - " + appName);
 				}
 			} catch (RuntimeException e) {
 				log.warn("There was a problem when constructing app - " + appName, e);

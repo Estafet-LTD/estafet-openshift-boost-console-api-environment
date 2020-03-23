@@ -189,6 +189,12 @@ public class Env {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return "Env [name=" + name + ", displayName=" + displayName + ", updatedDate=" + updatedDate + ", live=" + live
+				+ ", tested=" + tested + ", next=" + next + "]";
+	}
+
 	public Environment getEnvironment() {
 		Environment environment = Environment.builder()
 				.setUpdatedDate(updatedDate)
