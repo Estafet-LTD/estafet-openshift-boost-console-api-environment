@@ -34,19 +34,12 @@ public class OpenShiftClient {
 	@Autowired
 	private Tracer tracer;
 
-	private IClient getClient() {
-		IClient client = new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT).build();
-		client.getAuthorizationContext().setToken(getToken());
-		return client;
-	}
-	
 	@Cacheable(cacheNames = { "token" })
-	public String getToken() {
-		IClient client = new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT)
+	private IClient getClient() {
+		return new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT)
 				.withUserName(ENV.OPENSHIFT_USER)
 				.withPassword(ENV.OPENSHIFT_PASSWORD)
 				.build();
-		return client.getAuthorizationContext().getToken();
 	}
 	
 	@SuppressWarnings("deprecation")
