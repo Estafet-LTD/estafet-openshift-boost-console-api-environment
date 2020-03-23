@@ -131,29 +131,29 @@ public class Env {
 		return null;
 	}
 
-	private boolean changed(Env buildEnv) {
+	private boolean changed(Env other) {
 		if (live == null) {
-			if (buildEnv.live != null)
+			if (other.live != null)
 				return false;
-		} else if (!live.equals(buildEnv.live))
+		} else if (!live.equals(other.live))
 			return false;
 		if (displayName == null) {
-			if (buildEnv.displayName != null)
+			if (other.displayName != null)
 				return false;
-		} else if (!displayName.equals(buildEnv.displayName))
+		} else if (!displayName.equals(other.displayName))
 			return false;
 		if (tested == null) {
-			if (buildEnv.tested != null)
+			if (other.tested != null)
 				return false;
-		} else if (!tested.equals(buildEnv.tested))
+		} else if (!tested.equals(other.tested))
 			return false;
-		for (App recentApp : buildEnv.getApps()) {
+		for (App recentApp : other.getApps()) {
 			App app = getApp(recentApp.getName());
 			if (app == null || !app.isEqualTo(recentApp)) {
 				return true;
 			}
 		}
-		return buildEnv.getApps().size() == apps.size();
+		return other.getApps().size() == apps.size();
 	}
 
 	@Override

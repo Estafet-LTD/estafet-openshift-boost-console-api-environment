@@ -64,8 +64,10 @@ public class EnvironmentService {
 			Env savedEnv = envDAO.getEnv(env.getName());
 			if (savedEnv == null) {
 				result.add(env);
+				envDAO.createEnv(env);
 			} else {
 				result.add(savedEnv.update(env));
+				envDAO.updateEnv(savedEnv);
 			}
 		}
 		return result;
@@ -93,6 +95,7 @@ public class EnvironmentService {
 	public Env createProdEnv(String name) {
 		Env env =  Env.builder()
 					.setName(name)
+					.setDisplayName(name.substring(0, 1).toUpperCase() + name.substring(1))
 					.setLive(isLive(name))
 					.setTested(client.isEnvironmentTestPassed(ENV.PRODUCT + "-prod"))
 					.build();
