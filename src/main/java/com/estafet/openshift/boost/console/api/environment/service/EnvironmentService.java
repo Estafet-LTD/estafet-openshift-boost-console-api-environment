@@ -76,6 +76,7 @@ public class EnvironmentService {
 	}
 	
 	private List<Env> createEnv(String namespace, Map<String, IProject> projects, List<Env> envs) {
+		log.info("createEnv - " + namespace);
 		IProject project = projects.get(namespace);
 		String next = project.getLabels().get("next");
 		envs.add(createEnv(project, next));
