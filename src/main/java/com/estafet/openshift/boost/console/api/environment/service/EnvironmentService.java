@@ -102,10 +102,11 @@ public class EnvironmentService {
 	}
 
 	public Env createEnv(IProject project, String next) {
+		String nextEnv = envName(next);
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
 					.setDisplayName(project.getLabels().get("display"))
-					.setNext(envName(next))
+					.setNext(nextEnv.equals("prod") ? null : next)
 					.setTested(client.isEnvironmentTestPassed(project.getName()))
 					.build();
 		return addApps(env, project.getName());
@@ -114,10 +115,10 @@ public class EnvironmentService {
 	public Env addApps(Env env, String namespace) {
 		Map<String, IDeploymentConfig> dcs = client.getDeploymentConfigs(namespace);
 		Map<String, IService> services = client.getServices(namespace);
-		Map<String, IImageStream> buildImages = client.getImageStreams(ENV.PRODUCT + "-build");
+		Map<String, IImageStream> buildImages = client.getBuildImageStreams();
 		Map<String, IImageStream> cicdImages = client.getCICDImageStreams();
-		for (IImageStream image : client.getIImageStreams()) {
-			String appName = image.getName();
+		for (String appName : buildImages.keySet()) {
+			log.info("app - " + appName);
 			try {
 				App app;
 				if (env.getName().equals("build")) {

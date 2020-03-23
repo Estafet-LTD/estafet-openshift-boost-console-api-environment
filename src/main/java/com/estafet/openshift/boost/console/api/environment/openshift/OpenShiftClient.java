@@ -119,30 +119,14 @@ public class OpenShiftClient {
 			span.finish();
 		}
 	}
-
-	@SuppressWarnings("deprecation")
-	public List<IImageStream> getIImageStreams() {
-		Span span = tracer.buildSpan("OpenShiftClient.getIImageStreams").start();
-		try {
-			Map<String, String> labels = new HashMap<String, String>();
-			labels.put("product", ENV.PRODUCT);
-			labels.put("type", "build");
-			return getClient().list(ResourceKind.BUILD_CONFIG, ENV.PRODUCT + "-build", labels);
-		} catch (RuntimeException e) {
-			throw handleException(span, e);
-		} finally {
-			span.finish();
-		}
-	}
 	
 	@SuppressWarnings("deprecation")
-	public Map<String, IImageStream> getImageStreams(String namespace) {
-		Span span = tracer.buildSpan("OpenShiftClient.getImageStreams").start();
+	public Map<String, IImageStream> getBuildImageStreams() {
+		Span span = tracer.buildSpan("OpenShiftClient.getBuildImageStreams").start();
 		try {
-			span.setBaggageItem("namespace", namespace);
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
-			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, namespace, labels);
+			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, ENV.PRODUCT + "-build", labels);
 			Map<String, IImageStream> result = new HashMap<String, IImageStream>();
 			for (IImageStream image : images) {
 				result.put(image.getName(), image);
