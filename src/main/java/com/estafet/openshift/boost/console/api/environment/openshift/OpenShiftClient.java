@@ -121,12 +121,12 @@ public class OpenShiftClient {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public Map<String, IImageStream> getBuildImageStreams() {
-		Span span = tracer.buildSpan("OpenShiftClient.getBuildImageStreams").start();
+	public Map<String, IImageStream> getImageStreams(String namespace) {
+		Span span = tracer.buildSpan("OpenShiftClient.getImageStreams").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
-			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, ENV.PRODUCT + "-build", labels);
+			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, namespace, labels);
 			Map<String, IImageStream> result = new HashMap<String, IImageStream>();
 			for (IImageStream image : images) {
 				result.put(image.getName(), image);

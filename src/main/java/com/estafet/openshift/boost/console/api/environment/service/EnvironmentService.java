@@ -77,7 +77,6 @@ public class EnvironmentService {
 	}
 	
 	private List<Env> createEnv(String namespace, Map<String, IProject> projects, List<Env> envs) {
-		log.info("createEnv - " + namespace);
 		IProject project = projects.get(namespace);
 		String next = project.getLabels().get("next");
 		if (!next.equals(ENV.PRODUCT + "-end")) {
@@ -92,6 +91,7 @@ public class EnvironmentService {
 	}
 
 	public Env createProdEnv(String name) {
+		log.info("createProEnv - " + name);
 		Env env =  Env.builder()
 					.setName(name)
 					.setDisplayName(name.substring(0, 1).toUpperCase() + name.substring(1))
@@ -102,6 +102,7 @@ public class EnvironmentService {
 	}
 
 	public Env createEnv(IProject project, String next) {
+		log.info("createEnv - " + project);
 		String nextEnv = envName(next);
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
@@ -115,14 +116,14 @@ public class EnvironmentService {
 	public Env addApps(Env env, String namespace) {
 		Map<String, IDeploymentConfig> dcs = client.getDeploymentConfigs(namespace);
 		Map<String, IService> services = client.getServices(namespace);
-		Map<String, IImageStream> buildImages = client.getBuildImageStreams();
+		Map<String, IImageStream> images = client.getImageStreams(namespace);
 		Map<String, IImageStream> cicdImages = client.getCICDImageStreams();
-		for (String appName : buildImages.keySet()) {
+		for (String appName : images.keySet()) {
 			log.info("app - " + appName);
 			try {
 				App app;
 				if (env.getName().equals("build")) {
-					app = appFactory.getBuildApp(dcs.get(appName), services.get(appName), buildImages.get(appName), cicdImages.get(appName));	
+					app = appFactory.getBuildApp(dcs.get(appName), services.get(appName), images.get(appName), cicdImages.get(appName));	
 				} else {
 					app = appFactory.getApp(dcs.get(appName), services.get(appName));
 				}

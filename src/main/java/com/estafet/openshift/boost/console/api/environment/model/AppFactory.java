@@ -16,7 +16,7 @@ public class AppFactory {
 
 	public App getBuildApp(IDeploymentConfig dc, IService service, 
 			IImageStream buildImage, IImageStream cicdImage) {
-		if (dc == null & service == null) {
+		if (dc == null || service == null) {
 			return null;
 		} else {
 			return App.builder()
@@ -29,7 +29,7 @@ public class AppFactory {
 	}
 	
 	public App getApp(IDeploymentConfig dc, IService service) {
-		if (dc == null & service == null) {
+		if (dc == null || service == null) {
 			return null;
 		} else {
 			return App.builder()
