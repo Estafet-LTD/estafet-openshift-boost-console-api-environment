@@ -132,6 +132,20 @@ public class Env {
 	}
 
 	private boolean changed(Env other) {
+		if (isEqualTo(other)) {
+			for (App recentApp : other.getApps()) {
+				App app = getApp(recentApp.getName());
+				if (app == null || !app.isEqualTo(recentApp)) {
+					return true;
+				}
+			}
+			return other.getApps().size() == apps.size();	
+		} else {
+			return true;
+		}
+	}
+	
+	private boolean isEqualTo(Env other) {
 		if (live == null) {
 			if (other.live != null)
 				return false;
@@ -147,13 +161,7 @@ public class Env {
 				return false;
 		} else if (!tested.equals(other.tested))
 			return false;
-		for (App recentApp : other.getApps()) {
-			App app = getApp(recentApp.getName());
-			if (app == null || !app.isEqualTo(recentApp)) {
-				return true;
-			}
-		}
-		return other.getApps().size() == apps.size();
+		return true;
 	}
 
 	@Override

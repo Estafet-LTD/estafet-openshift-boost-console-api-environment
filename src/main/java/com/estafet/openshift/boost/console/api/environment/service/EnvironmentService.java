@@ -102,7 +102,7 @@ public class EnvironmentService {
 	}
 
 	public Env createEnv(IProject project, String next) {
-		log.info("createEnv - " + project);
+		log.info("createEnv - " + project.getName());
 		String nextEnv = envName(next);
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
