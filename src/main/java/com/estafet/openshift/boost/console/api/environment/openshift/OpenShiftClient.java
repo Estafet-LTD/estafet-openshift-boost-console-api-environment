@@ -36,6 +36,7 @@ public class OpenShiftClient {
 
 	private IClient getClient() {
 		return new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT)
+				.withUserName(ENV.OPENSHIFT_USER)
 				.usingToken(getToken())
 				.build();
 	}
@@ -55,10 +56,10 @@ public class OpenShiftClient {
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
-			labels.put("stage", "true");
 			List<IProject> projects = getClient().list(ResourceKind.PROJECT, labels);
 			Map<String, IProject> result = new HashMap<String, IProject>();
 			for (IProject project : projects) {
+				if (project.getLabels().get("stage").equals("true"))
 				result.put(project.getName(), project);
 			}
 			return result;
