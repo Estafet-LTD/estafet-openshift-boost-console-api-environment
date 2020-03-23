@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.environment.model.App;
 import com.estafet.openshift.boost.console.api.environment.model.AppFactory;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.console.api.environment.util.ENV;
 import com.estafet.openshift.boost.messages.environments.Environment;
 import com.openshift.restclient.model.IBuild;
 import com.openshift.restclient.model.IDeploymentConfig;

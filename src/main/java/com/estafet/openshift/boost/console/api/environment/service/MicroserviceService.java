@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
@@ -20,12 +21,32 @@ public class MicroserviceService {
 	@Autowired
 	private EnvDAO envDAO;
 
+	@Transactional(readOnly = true)
 	public List<Environment> getMicroserviceEnvironments() {
-		List<Environment> environments = new ArrayList<Environment>();
-		for (Env env : envDAO.getEnvs()) {
-			environments.add(env.getEnvironment());
+		return getMicroserviceEnvironments("build");
+	}
+	
+	public List<Environment> getMicroserviceEnvironments(String envId) {
+		return getMicroserviceEnvironments(envId, new ArrayList<Environment>());
+	}
+	
+	private List<Environment> getMicroserviceEnvironments(String envId, List<Environment> envs) {
+		Env env = envDAO.getEnv(envId);
+		envs.add(env.getEnvironment());
+		if (env.getNext() != null) {
+			return getMicroserviceEnvironments(env.getNext(), envs);
+		} else {
+			Env green = envDAO.getEnv("green");
+			Env blue = envDAO.getEnv("blue");
+			if (green.getLive()) {
+				envs.add(blue.getEnvironment());
+				envs.add(green.getEnvironment());
+			} else {
+				envs.add(green.getEnvironment());
+				envs.add(blue.getEnvironment());
+			}
+			return envs;
 		}
-		return environments;
 	}
 
 	public Environment doAction(String env, String app, String action) {
