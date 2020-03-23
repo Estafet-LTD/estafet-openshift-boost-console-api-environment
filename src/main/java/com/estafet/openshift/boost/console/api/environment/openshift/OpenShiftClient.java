@@ -68,11 +68,11 @@ public class OpenShiftClient {
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean isEnvironmentTestPassed(String env) {
+	public boolean isEnvironmentTestPassed(String namespace) {
 		Span span = tracer.buildSpan("OpenShiftClient.isEnvironmentTestPassed").start();
 		try {
 			return Boolean.parseBoolean(
-					((IProject) getClient().get(ResourceKind.PROJECT, ENV.PRODUCT + "-" + env)).getLabels()
+					((IProject) getClient().get(ResourceKind.PROJECT, namespace)).getLabels()
 							.get("test-passed"));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
@@ -85,8 +85,10 @@ public class OpenShiftClient {
 	public Map<String, IDeploymentConfig> getDeploymentConfigs(String namespace) {
 		Span span = tracer.buildSpan("OpenShiftClient.getDeploymentConfigs").start();
 		try {
+			Map<String, String> labels = new HashMap<String, String>();
+			labels.put("product", ENV.PRODUCT);
 			span.setBaggageItem("namespace", namespace);
-			List<IDeploymentConfig> dcs = getClient().list(ResourceKind.DEPLOYMENT_CONFIG, namespace, "product=" + ENV.PRODUCT);
+			List<IDeploymentConfig> dcs = getClient().list(ResourceKind.DEPLOYMENT_CONFIG, namespace, labels);
 			Map<String, IDeploymentConfig> result = new HashMap<String, IDeploymentConfig>();
 			for (IDeploymentConfig dc : dcs) {
 				result.put(dc.getName(), dc);
@@ -103,8 +105,10 @@ public class OpenShiftClient {
 	public Map<String, IService> getServices(String namespace) {
 		Span span = tracer.buildSpan("OpenShiftClient.getServices").start();
 		try {
+			Map<String, String> labels = new HashMap<String, String>();
+			labels.put("product", ENV.PRODUCT);
 			span.setBaggageItem("namespace", namespace);
-			List<IService> services = getClient().list(ResourceKind.SERVICE, namespace, "product=" + ENV.PRODUCT);
+			List<IService> services = getClient().list(ResourceKind.SERVICE, namespace, labels);
 			Map<String, IService> result = new HashMap<String, IService>();
 			for (IService service : services) {
 				result.put(service.getName(), service);
@@ -151,24 +155,12 @@ public class OpenShiftClient {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public boolean isEnvironmentTestPassed() {
-		Span span = tracer.buildSpan("OpenShiftClient.isEnvironmentTestPassed").start();
-		try {
-			return Boolean.parseBoolean(
-					((IProject) getClient().get(ResourceKind.PROJECT, ENV.PRODUCT + "-prod", ENV.PRODUCT + "-prod")).getLabels()
-							.get("test-passed"));
-		} catch (RuntimeException e) {
-			throw handleException(span, e);
-		} finally {
-			span.finish();
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
 	public IRoute getRoute() {
 		Span span = tracer.buildSpan("OpenShiftClient.getRoute").start();
 		try {
-			return (IRoute) getClient().list(ResourceKind.ROUTE, ENV.PRODUCT + "-prod", "product=" + ENV.PRODUCT).get(0);
+			Map<String, String> labels = new HashMap<String, String>();
+			labels.put("product", ENV.PRODUCT);
+			return (IRoute) getClient().list(ResourceKind.ROUTE, ENV.PRODUCT + "-prod", labels).get(0);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
