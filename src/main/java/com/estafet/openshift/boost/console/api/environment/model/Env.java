@@ -188,6 +188,7 @@ public class Env {
 				.setName(name)
 				.setDisplayName(displayName)
 				.setTested(tested)
+				.setNext(next)
 				.build();
 		for (App app : apps) {
 			EnvironmentApp envApp = EnvironmentApp.builder()
