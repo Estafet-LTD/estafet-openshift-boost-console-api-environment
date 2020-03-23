@@ -35,10 +35,9 @@ public class OpenShiftClient {
 	private Tracer tracer;
 
 	private IClient getClient() {
-		return new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT)
-				.withUserName(ENV.OPENSHIFT_USER)
-				.usingToken(getToken())
-				.build();
+		IClient client = new ClientBuilder("https://" + ENV.OPENSHIFT_HOST_PORT).build();
+		client.getAuthorizationContext().setToken(getToken());
+		return client;
 	}
 	
 	@Cacheable(cacheNames = { "token" })
