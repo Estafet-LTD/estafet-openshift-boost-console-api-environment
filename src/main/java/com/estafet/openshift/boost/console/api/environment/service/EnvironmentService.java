@@ -80,7 +80,7 @@ public class EnvironmentService {
 		IProject project = projects.get(namespace);
 		String next = project.getLabels().get("next");
 		envs.add(createEnv(project, next));
-		if (!next.equals("end")) {
+		if (!next.equals(ENV.PRODUCT + "-end")) {
 			return createEnv(next, projects, envs);
 		} else if (namespace.equals(ENV.PRODUCT + "-prod")) {
 			envs.add(createProdEnv("green"));
