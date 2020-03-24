@@ -104,6 +104,7 @@ public class Env {
 			displayName = other.displayName;
 			live = other.live;
 			tested = other.tested;
+			next = other.next;
 			for (App recentApp : other.getApps()) {
 				App app = getApp(recentApp.getName());
 				if (app == null) {
@@ -146,6 +147,11 @@ public class Env {
 	}
 	
 	private boolean isEqualTo(Env other) {
+		if (next == null) {
+			if (other.next != null)
+				return false;
+		} else if (!next.equals(other.next))
+			return false;
 		if (live == null) {
 			if (other.live != null)
 				return false;

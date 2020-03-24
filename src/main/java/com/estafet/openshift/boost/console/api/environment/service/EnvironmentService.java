@@ -103,11 +103,10 @@ public class EnvironmentService {
 
 	public Env createEnv(IProject project, String next) {
 		log.info("createEnv - " + project.getName());
-		String nextEnv = envName(next);
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
 					.setDisplayName(project.getLabels().get("display"))
-					.setNext(nextEnv.equals("prod") ? null : nextEnv)
+					.setNext(envName(next))
 					.setTested(client.isEnvironmentTestPassed(project.getName()))
 					.build();
 		return addApps(env, project.getName());

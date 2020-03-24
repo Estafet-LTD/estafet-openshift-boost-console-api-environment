@@ -33,7 +33,7 @@ public class MicroserviceService {
 	private List<Environment> getMicroserviceEnvironments(String envId, List<Environment> envs) {
 		Env env = envDAO.getEnv(envId);
 		envs.add(env.getEnvironment());
-		if (env.getNext() != null) {
+		if (env.getNext().equals("prod")) {
 			return getMicroserviceEnvironments(env.getNext(), envs);
 		} else {
 			Env green = envDAO.getEnv("green");
