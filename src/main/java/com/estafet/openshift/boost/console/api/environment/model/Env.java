@@ -105,6 +105,7 @@ public class Env {
 			live = other.live;
 			tested = other.tested;
 			next = other.next;
+			updatedDate = DateUtils.newDate();
 			for (App recentApp : other.getApps()) {
 				App app = getApp(recentApp.getName());
 				if (app == null) {
