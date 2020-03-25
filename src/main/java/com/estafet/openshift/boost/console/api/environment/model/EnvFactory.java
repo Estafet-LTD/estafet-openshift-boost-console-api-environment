@@ -56,9 +56,17 @@ public class EnvFactory {
 					.setName(name)
 					.setDisplayName(isLive(name) ? "Live" : "Staging")
 					.setLive(isLive(name))
-					.setTested(client.isEnvironmentTestPassed(ENV.PROD))
+					.setTested(prodTestedStatus(name))
 					.build();
 		return addApps(env, ENV.PROD);
+	}
+
+	public Boolean prodTestedStatus(String name) {
+		if (isLive(name)) {
+			return null;
+		} else {
+			return client.isEnvironmentTestPassed(ENV.PROD);	
+		}
 	}
 
 	private Env createEnv(IProject project, String next) {
@@ -67,9 +75,16 @@ public class EnvFactory {
 					.setName(envName(project.getName()))
 					.setDisplayName(project.getLabels().get("display"))
 					.setNext(envName(next))
-					.setTested(client.isEnvironmentTestPassed(project.getName()))
+					.setTested(testedStatus(project))
 					.build();
 		return addApps(env, project.getName());
+	}
+
+	public Boolean testedStatus(IProject project) {
+		if (project.getName().equals(ENV.BUILD)) {
+			return null;
+		} 
+		return client.isEnvironmentTestPassed(project.getName());
 	}
 
 	private Env addApps(Env env, String namespace) {
