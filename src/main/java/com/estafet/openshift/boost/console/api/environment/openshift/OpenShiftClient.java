@@ -264,6 +264,7 @@ public class OpenShiftClient {
 	public void executePromoteAllPipeline(String env) {
 		Span span = tracer.buildSpan("OpenShiftClient.getPromoteAllPipeline").start();
 		try {
+			span.setBaggageItem("env", env);
 			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-all-" + env, ENV.PRODUCT + "-cicd"));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
@@ -276,6 +277,7 @@ public class OpenShiftClient {
 	public void executeTestPipeline(String env) {
 		Span span = tracer.buildSpan("OpenShiftClient.getTestPipeline").start();
 		try {
+			span.setBaggageItem("env", env);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.PRODUCT + "-cicd"));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
