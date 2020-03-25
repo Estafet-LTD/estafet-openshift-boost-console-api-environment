@@ -52,18 +52,14 @@ public class MicroserviceService {
 	public Environment doAction(String env, String app, String action) {
 		if (env.equals("build")) {
 			if (action.equals("build")) {
-				client.executeBuildAllPipeline();
+				client.executeBuildPipeline(app);
 			} else if (action.equals("promote")) {
-				client.executeReleaseAllPipeline();
+				client.executeReleasePipeline(app);
 			}
 		} else {
 			if (action.equals("promote")) {
-				client.executePromoteAllPipeline(env);
-			} else if (action.equals("test")) {
-				client.executeTestPipeline(env);
-			} else if (action.equals("go-live") || action.equals("back-out")) {
-				client.executePromoteToLivePipeline();
-			}
+				client.executePromotePipeline(env, app);
+			} 
 		}
 		return envDAO.getEnv(env).getEnvironment();
 	}
