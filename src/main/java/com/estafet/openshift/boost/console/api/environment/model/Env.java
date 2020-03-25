@@ -133,16 +133,15 @@ public class Env {
 
 	public boolean changed(Env other) {
 		if (!isEqualTo(other)) {
-			for (App recentApp : other.getApps()) {
-				App app = getApp(recentApp.getName());
-				if (app == null || !app.isEqualTo(recentApp)) {
-					return true;
-				}
-			}
-			return other.getApps().size() != apps.size();	
-		} else {
-			return false;
+			return true;
 		}
+		for (App recentApp : other.getApps()) {
+			App app = getApp(recentApp.getName());
+			if (app == null || !app.isEqualTo(recentApp)) {
+				return true;
+			}
+		}
+		return other.getApps().size() != apps.size();	
 	}
 	
 	private boolean isEqualTo(Env other) {
