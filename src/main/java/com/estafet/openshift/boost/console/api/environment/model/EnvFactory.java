@@ -53,8 +53,8 @@ public class EnvFactory {
 	public Env createProdEnv(String name) {
 		log.info("createProEnv - " + name);
 		Env env =  Env.builder()
-					.setName(isLive(name) ? "Live" : "Staging")
-					.setDisplayName(name.substring(0, 1).toUpperCase() + name.substring(1))
+					.setName(name)
+					.setDisplayName(isLive(name) ? "Live" : "Staging")
 					.setLive(isLive(name))
 					.setTested(client.isEnvironmentTestPassed(ENV.PROD))
 					.build();
