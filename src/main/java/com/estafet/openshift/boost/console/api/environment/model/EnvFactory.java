@@ -84,7 +84,9 @@ public class EnvFactory {
 				IService service = services.get(appName);
 				if (env.getName().equals("build")) {
 					app = appFactory.getBuildApp(dc, service, images.get(appName), cicdImages.get(appName));	
-				} else if ((env.getName().equals("green") || env.getName().equals("blue")) && appName.startsWith(env.getName())) {
+				} else if (env.getName().equals("green") && appName.startsWith("green")) {
+					app = appFactory.getApp(dc, service);	
+				} else if (env.getName().equals("blue") && appName.startsWith("blue")) {
 					app = appFactory.getApp(dc, service);	
 				} else {
 					app = appFactory.getApp(dc, service);
