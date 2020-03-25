@@ -141,7 +141,7 @@ public class Env {
 			}
 			return other.getApps().size() != apps.size();	
 		} else {
-			return true;
+			return false;
 		}
 	}
 	
