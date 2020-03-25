@@ -22,7 +22,7 @@ public class AppFactory {
 			return App.builder()
 					.setDeployed(isDeployed(service))
 					.setDeployedDate(new DeploymentConfigParser(dc).getDeployedDate())
-					.setName(dc.getName())
+					.setName(appName(dc))
 					.setVersion(getBuildVersion(buildImage, cicdImage))
 					.build();
 		}
@@ -35,10 +35,22 @@ public class AppFactory {
 			return App.builder()
 					.setDeployed(isDeployed(service))
 					.setDeployedDate(new DeploymentConfigParser(dc).getDeployedDate())
-					.setName(dc.getName())
+					.setName(appName(dc))
 					.setVersion(new DeploymentConfigParser(dc).getVersion())
 					.build();
 		}
+	}
+
+	public String appName(IDeploymentConfig dc) {
+		String name = dc.getName();
+		if (name.startsWith("green")) {
+			return name.substring("green".length());
+		} else if (name.startsWith("blue")) {
+			return name.substring("blue".length());
+		} else {
+			return name;
+		}
+			
 	}
 
 	private String getBuildVersion(IImageStream buildImage, IImageStream cicdImage) {
