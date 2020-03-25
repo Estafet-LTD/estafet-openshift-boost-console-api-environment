@@ -50,7 +50,7 @@ public class EnvFactory {
 		throw new RuntimeException("cannot create Env for namespace - " + namespace);
 	}
 
-	public Env createProdEnv(String name) {
+	private Env createProdEnv(String name) {
 		log.info("createProEnv - " + name);
 		Env env =  Env.builder()
 					.setName(name)
@@ -61,7 +61,7 @@ public class EnvFactory {
 		return addApps(env, ENV.PROD);
 	}
 
-	public Env createEnv(IProject project, String next) {
+	private Env createEnv(IProject project, String next) {
 		log.info("createEnv - " + project.getName());
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
@@ -72,7 +72,7 @@ public class EnvFactory {
 		return addApps(env, project.getName());
 	}
 
-	public Env addApps(Env env, String namespace) {
+	private Env addApps(Env env, String namespace) {
 		Map<String, IDeploymentConfig> dcs = client.getDeploymentConfigs(namespace);
 		Map<String, IService> services = client.getServices(namespace);
 		for (String appName : dcs.keySet()) {
