@@ -102,16 +102,6 @@ public class App {
 				return false;
 		} else if (!deployedDate.equals(other.deployedDate))
 			return false;
-		if (env == null) {
-			if (other.env != null)
-				return false;
-		} else if (!env.equals(other.env))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		if (version == null) {
 			if (other.version != null)
 				return false;

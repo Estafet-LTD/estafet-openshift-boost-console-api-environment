@@ -24,12 +24,14 @@ public class EnvDAO {
 		return entityManager.find(Env.class, envId);
 	}
 
-	public void updateEnv(Env env) {
+	public Env updateEnv(Env env) {
 		entityManager.merge(env);
+		return env;
 	}
 
-	public void createEnv(Env env) {
-		entityManager.persist(env);	
+	public Env createEnv(Env env) {
+		entityManager.persist(env);
+		return env;
 	}
 	
 }

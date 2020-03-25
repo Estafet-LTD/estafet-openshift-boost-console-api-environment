@@ -50,11 +50,9 @@ public class EnvironmentService {
 		for (Env env : envFactory.getEnvs()) {
 			Env savedEnv = envDAO.getEnv(env.getName());
 			if (savedEnv == null) {
-				envDAO.createEnv(env);
-				savedEnv = env;
+				savedEnv = envDAO.createEnv(env);
 			} else if (savedEnv.changed(env)) {
-				envDAO.updateEnv(savedEnv);
-				savedEnv = savedEnv.merge(env);
+				savedEnv = envDAO.updateEnv(savedEnv.merge(env));
 			}
 			result.add(savedEnv);
 		}
