@@ -75,14 +75,14 @@ public class EnvFactory {
 	public Env addApps(Env env, String namespace) {
 		Map<String, IDeploymentConfig> dcs = client.getDeploymentConfigs(namespace);
 		Map<String, IService> services = client.getServices(namespace);
-		Map<String, IImageStream> images = client.getImageStreams(namespace);
-		Map<String, IImageStream> cicdImages = client.getCICDImageStreams();
 		for (String appName : dcs.keySet()) {
 			try {
 				App app = null;
 				IDeploymentConfig dc = dcs.get(appName);
 				IService service = services.get(appName);
 				if (env.getName().equals("build")) {
+					Map<String, IImageStream> cicdImages = client.getCICDImageStreams();
+					Map<String, IImageStream> images = client.getImageStreams(namespace);
 					app = appFactory.getBuildApp(dc, service, images.get(appName), cicdImages.get(appName));	
 				} else {
 					app = appFactory.getApp(dc, service);
