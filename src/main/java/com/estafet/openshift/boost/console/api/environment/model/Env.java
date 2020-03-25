@@ -196,6 +196,10 @@ public class Env {
 		return true;
 	}
 	
+	public boolean isProd() {
+		return name.equals("green") || name.equals("blue");
+	}
+	
 	@Override
 	public String toString() {
 		return "Env [name=" + name + ", displayName=" + displayName + ", updatedDate=" + updatedDate + ", live=" + live
