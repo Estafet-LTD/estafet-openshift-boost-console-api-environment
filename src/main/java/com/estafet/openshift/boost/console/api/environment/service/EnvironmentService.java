@@ -52,9 +52,9 @@ public class EnvironmentService {
 			if (savedEnv == null) {
 				result.add(env);
 				envDAO.createEnv(env);
-			} else {
-				result.add(savedEnv.update(env));
+			} else if (savedEnv.changed(env)) {
 				envDAO.updateEnv(savedEnv);
+				result.add(savedEnv.merge(env));
 			}
 		}
 		return result;

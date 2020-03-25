@@ -120,7 +120,7 @@ public class App {
 		return true;
 	}
 
-	public void update(App recentApp) {
+	public void merge(App recentApp) {
 		this.version = recentApp.version;
 		this.name = recentApp.name;
 		this.deployedDate = recentApp.deployedDate;

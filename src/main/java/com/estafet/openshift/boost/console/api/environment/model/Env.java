@@ -99,20 +99,18 @@ public class Env {
 		this.apps = apps;
 	}
 
-	public Env update(Env other) {
-		if (changed(other)) {
-			displayName = other.displayName;
-			live = other.live;
-			tested = other.tested;
-			next = other.next;
-			updatedDate = DateUtils.newDate();
-			for (App recentApp : other.getApps()) {
-				App app = getApp(recentApp.getName());
-				if (app == null) {
-					addApp(recentApp);
-				} else if (app.getName().equals(recentApp.getName())) {
-					app.update(recentApp);
-				}
+	public Env merge(Env other) {
+		displayName = other.displayName;
+		live = other.live;
+		tested = other.tested;
+		next = other.next;
+		updatedDate = DateUtils.newDate();
+		for (App recentApp : other.getApps()) {
+			App app = getApp(recentApp.getName());
+			if (app == null) {
+				addApp(recentApp);
+			} else if (app.getName().equals(recentApp.getName())) {
+				app.merge(recentApp);
 			}
 		}
 		return this;
@@ -133,8 +131,8 @@ public class Env {
 		return null;
 	}
 
-	private boolean changed(Env other) {
-		if (isEqualTo(other)) {
+	public boolean changed(Env other) {
+		if (!isEqualTo(other)) {
 			for (App recentApp : other.getApps()) {
 				App app = getApp(recentApp.getName());
 				if (app == null || !app.isEqualTo(recentApp)) {
