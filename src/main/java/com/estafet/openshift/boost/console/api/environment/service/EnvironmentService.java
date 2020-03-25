@@ -48,7 +48,7 @@ public class EnvironmentService {
 	@Transactional
 	public List<Env> updateEnvs() {
 		List<Env> result = new ArrayList<Env>();
-		for (Env env : envFactory.getEnvs(ENV.PRODUCT + "-build")) {
+		for (Env env : envFactory.getEnvs(ENV.BUILD)) {
 			Env savedEnv = envDAO.getEnv(env.getName());
 			if (savedEnv == null) {
 				result.add(env);

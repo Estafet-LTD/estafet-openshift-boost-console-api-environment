@@ -42,7 +42,7 @@ public class EnvFactory {
 		if (!next.equals(ENV.PRODUCT + "-end")) {
 			envs.add(createEnv(project, next));
 			return getEnvs(next, projects, envs);
-		} else if (namespace.equals(ENV.PRODUCT + "-prod")) {
+		} else if (namespace.equals(ENV.PROD)) {
 			envs.add(createProdEnv("green"));
 			envs.add(createProdEnv("blue"));
 			return envs;
@@ -53,12 +53,12 @@ public class EnvFactory {
 	public Env createProdEnv(String name) {
 		log.info("createProEnv - " + name);
 		Env env =  Env.builder()
-					.setName(name)
+					.setName(isLive(name) ? "Live" : "Staging")
 					.setDisplayName(name.substring(0, 1).toUpperCase() + name.substring(1))
 					.setLive(isLive(name))
-					.setTested(client.isEnvironmentTestPassed(ENV.PRODUCT + "-prod"))
+					.setTested(client.isEnvironmentTestPassed(ENV.PROD))
 					.build();
-		return addApps(env, ENV.PRODUCT + "-prod");
+		return addApps(env, ENV.PROD);
 	}
 
 	public Env createEnv(IProject project, String next) {
@@ -78,14 +78,14 @@ public class EnvFactory {
 		Map<String, IImageStream> images = client.getImageStreams(namespace);
 		Map<String, IImageStream> cicdImages = client.getCICDImageStreams();
 		for (String appName : dcs.keySet()) {
-			appName = appName(env, appName);
-			log.info("app - " + appName);
 			try {
-				App app;
+				App app = null;
 				IDeploymentConfig dc = dcs.get(appName);
 				IService service = services.get(appName);
 				if (env.getName().equals("build")) {
 					app = appFactory.getBuildApp(dc, service, images.get(appName), cicdImages.get(appName));	
+				} else if ((env.getName().equals("green") || env.getName().equals("blue")) && appName.startsWith(env.getName())) {
+					app = appFactory.getApp(dc, service);	
 				} else {
 					app = appFactory.getApp(dc, service);
 				}
@@ -99,14 +99,6 @@ public class EnvFactory {
 			}
 		}
 		return env;
-	}
-	
-	private String appName(Env env, String appName) {
-		if (env.getName().equals("blue") || env.getName().equals("green")) {
-			return env.getName() + appName;
-		} else {
-			return appName;
-		}
 	}
 	
 	private boolean isLive(String name) {

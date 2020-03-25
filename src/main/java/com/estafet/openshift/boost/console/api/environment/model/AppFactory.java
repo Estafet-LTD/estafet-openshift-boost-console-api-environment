@@ -1,5 +1,7 @@
 package com.estafet.openshift.boost.console.api.environment.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +16,8 @@ import com.openshift.restclient.model.IService;
 @Component
 public class AppFactory {
 
+	private static final Logger log = LoggerFactory.getLogger(AppFactory.class);
+	
 	public App getBuildApp(IDeploymentConfig dc, IService service, 
 			IImageStream buildImage, IImageStream cicdImage) {
 		if (dc == null || service == null) {
@@ -29,6 +33,7 @@ public class AppFactory {
 	}
 	
 	public App getApp(IDeploymentConfig dc, IService service) {
+		log.info("app - " + dc.getName());
 		if (dc == null || service == null) {
 			return null;
 		} else {
@@ -50,7 +55,6 @@ public class AppFactory {
 		} else {
 			return name;
 		}
-			
 	}
 
 	private String getBuildVersion(IImageStream buildImage, IImageStream cicdImage) {
