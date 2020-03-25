@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.model.EnvFactory;
@@ -48,7 +47,7 @@ public class EnvironmentService {
 	@Transactional
 	public List<Env> updateEnvs() {
 		List<Env> result = new ArrayList<Env>();
-		for (Env env : envFactory.getEnvs(ENV.BUILD)) {
+		for (Env env : envFactory.getEnvs()) {
 			Env savedEnv = envDAO.getEnv(env.getName());
 			if (savedEnv == null) {
 				result.add(env);

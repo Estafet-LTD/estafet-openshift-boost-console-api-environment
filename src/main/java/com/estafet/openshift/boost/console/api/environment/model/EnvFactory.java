@@ -28,8 +28,8 @@ public class EnvFactory {
 	@Autowired
 	private AppFactory appFactory;
 	
-	public List<Env> getEnvs(String namespace) {
-		return getEnvs(namespace, client.getProjects());
+	public List<Env> getEnvs() {
+		return getEnvs(ENV.BUILD, client.getProjects());
 	}
 	
 	private List<Env> getEnvs(String namespace, Map<String, IProject> projects) {
