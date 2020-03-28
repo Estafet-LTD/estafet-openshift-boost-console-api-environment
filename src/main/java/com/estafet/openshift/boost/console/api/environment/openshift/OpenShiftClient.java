@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.estafet.openshift.boost.commons.lib.env.ENV;
+import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.openshift.restclient.ClientBuilder;
 import com.openshift.restclient.IClient;
 import com.openshift.restclient.ResourceKind;
@@ -37,6 +38,9 @@ public class OpenShiftClient {
 	
 	@Autowired
 	private Tracer tracer;
+	
+	@Autowired
+	private EnvDAO envDAO;
 
 	@Cacheable(cacheNames = { "token" })
 	private IClient getClient() {
@@ -227,8 +231,14 @@ public class OpenShiftClient {
 			span.setBaggageItem("env", env);
 			span.setBaggageItem("app", app);
 			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("project", ENV.namespace(env));
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-" + app, ENV.CICD), parameters);
+			parameters.put("PROJECT", ENV.namespace(env));
+			String pipeline;
+			if (envDAO.getEnv(env).getNext().equals("prod")) {
+				pipeline = "promote-to-prod-";
+			} else {
+				pipeline = "promote-";
+			}
+			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -241,20 +251,13 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executePromoteAllPipeline").start();
 		try {
 			span.setBaggageItem("env", env);
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-all-" + env, ENV.CICD));
-		} catch (RuntimeException e) {
-			throw handleException(span, e);
-		} finally {
-			span.finish();
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	public void executeProdTestPipeline(String env) {
-		Span span = tracer.buildSpan("executeProdTestPipeline").start();
-		try {
-			span.setBaggageItem("env", env);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.CICD));
+			String pipeline;
+			if (envDAO.getEnv(env).getNext().equals("prod")) {
+				pipeline = "promote-all-to-prod-";
+			} else {
+				pipeline = "promote-all-";
+			}
+			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline + env, ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
