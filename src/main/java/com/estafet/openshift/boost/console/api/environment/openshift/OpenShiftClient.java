@@ -48,7 +48,7 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public Map<String, IProject> getProjects() {
-		Span span = tracer.buildSpan("OpenShiftClient.getProjects").start();
+		Span span = tracer.buildSpan("getProjects").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
@@ -69,7 +69,7 @@ public class OpenShiftClient {
 
 	@SuppressWarnings("deprecation")
 	public boolean isEnvironmentTestPassed(String namespace) {
-		Span span = tracer.buildSpan("OpenShiftClient.isEnvironmentTestPassed").start();
+		Span span = tracer.buildSpan("isEnvironmentTestPassed").start();
 		try {			
 			span.setBaggageItem("namespace", namespace);
 			return Boolean.parseBoolean(getClient().get(ResourceKind.PROJECT, namespace).getLabels().get("test-passed"));
@@ -82,7 +82,7 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public Map<String, IDeploymentConfig> getDeploymentConfigs(String namespace) {
-		Span span = tracer.buildSpan("OpenShiftClient.getDeploymentConfigs").start();
+		Span span = tracer.buildSpan("getDeploymentConfigs").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
@@ -102,7 +102,7 @@ public class OpenShiftClient {
 
 	@SuppressWarnings("deprecation")
 	public Map<String, IService> getServices(String namespace) {
-		Span span = tracer.buildSpan("OpenShiftClient.getServices").start();
+		Span span = tracer.buildSpan("getServices").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
@@ -122,7 +122,7 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public Map<String, IImageStream> getImageStreams(String namespace) {
-		Span span = tracer.buildSpan("OpenShiftClient.getImageStreams").start();
+		Span span = tracer.buildSpan("getImageStreams").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
@@ -141,9 +141,9 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public Map<String, IImageStream> getCICDImageStreams() {
-		Span span = tracer.buildSpan("OpenShiftClient.getCICDImageStreams").start();
+		Span span = tracer.buildSpan("getCICDImageStreams").start();
 		try {
-			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, ENV.PRODUCT + "-cicd");
+			List<IImageStream> images = getClient().list(ResourceKind.IMAGE_STREAM, ENV.CICD);
 			Map<String, IImageStream> result = new HashMap<String, IImageStream>();
 			for (IImageStream image : images) {
 				result.put(image.getName(), image);
@@ -158,7 +158,7 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public IRoute getRoute() {
-		Span span = tracer.buildSpan("OpenShiftClient.getRoute").start();
+		Span span = tracer.buildSpan("getRoute").start();
 		try {
 			Map<String, String> labels = new HashMap<String, String>();
 			labels.put("product", ENV.PRODUCT);
@@ -172,10 +172,10 @@ public class OpenShiftClient {
 
 	@SuppressWarnings("deprecation")
 	public void executeBuildPipeline(String app) {
-		Span span = tracer.buildSpan("OpenShiftClient.getBuildPipeline").start();
+		Span span = tracer.buildSpan("executeBuildPipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.PRODUCT + "-cicd"));
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -185,9 +185,9 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public void executeBuildAllPipeline() {
-		Span span = tracer.buildSpan("OpenShiftClient.getBuildAllPipeline").start();
+		Span span = tracer.buildSpan("executeBuildAllPipeline").start();
 		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-all", ENV.PRODUCT + "-cicd"));
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-all", ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -197,10 +197,10 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public void executeReleasePipeline(String app) {
-		Span span = tracer.buildSpan("OpenShiftClient.getReleasePipeline").start();
+		Span span = tracer.buildSpan("executeReleasePipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-" + app, ENV.PRODUCT + "-cicd"));
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-" + app, ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -210,35 +210,9 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public void executeReleaseAllPipeline() {
-		Span span = tracer.buildSpan("OpenShiftClient.getReleasePipeline").start();
+		Span span = tracer.buildSpan("executeReleaseAllPipeline").start();
 		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-all", ENV.PRODUCT + "-cicd"));
-		} catch (RuntimeException e) {
-			throw handleException(span, e);
-		} finally {
-			span.finish();
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void executePromoteToProdPipeline(String app) {
-		Span span = tracer.buildSpan("OpenShiftClient.getPromoteToProdPipeline").start();
-		try {
-			span.setBaggageItem("app", app);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "promote-to-prod-" + app,
-					ENV.PRODUCT + "-cicd"));
-		} catch (RuntimeException e) {
-			throw handleException(span, e);
-		} finally {
-			span.finish();
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	public void executePromoteAllToProdPipeline() {
-		Span span = tracer.buildSpan("OpenShiftClient.getPromoteAllToProdPipeline").start();
-		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "promote-all-to-prod", ENV.PRODUCT + "-cicd"));
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-all", ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -248,11 +222,13 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public void executePromotePipeline(String env, String app) {
-		Span span = tracer.buildSpan("OpenShiftClient.getPromotePipeline").start();
+		Span span = tracer.buildSpan("executePromotePipeline").start();
 		try {
+			span.setBaggageItem("env", env);
 			span.setBaggageItem("app", app);
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-" + env + "-" + app,
-					ENV.PRODUCT + "-cicd"));
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("project", ENV.namespace(env));
+			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-" + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -262,10 +238,10 @@ public class OpenShiftClient {
 
 	@SuppressWarnings("deprecation")
 	public void executePromoteAllPipeline(String env) {
-		Span span = tracer.buildSpan("OpenShiftClient.getPromoteAllPipeline").start();
+		Span span = tracer.buildSpan("executePromoteAllPipeline").start();
 		try {
 			span.setBaggageItem("env", env);
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-all-" + env, ENV.PRODUCT + "-cicd"));
+			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, "promote-all-" + env, ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -274,11 +250,24 @@ public class OpenShiftClient {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void executeTestPipeline(String env) {
-		Span span = tracer.buildSpan("OpenShiftClient.getTestPipeline").start();
+	public void executeProdTestPipeline(String env) {
+		Span span = tracer.buildSpan("executeProdTestPipeline").start();
 		try {
 			span.setBaggageItem("env", env);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.PRODUCT + "-cicd"));
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.CICD));
+		} catch (RuntimeException e) {
+			throw handleException(span, e);
+		} finally {
+			span.finish();
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void executeTestPipeline(String env) {
+		Span span = tracer.buildSpan("executeTestPipeline").start();
+		try {
+			span.setBaggageItem("env", env);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -288,9 +277,9 @@ public class OpenShiftClient {
 	
 	@SuppressWarnings("deprecation")
 	public void executePromoteToLivePipeline() {
-		Span span = tracer.buildSpan("OpenShiftClient.getPromoteToLivePipeline").start();
+		Span span = tracer.buildSpan("executePromoteToLivePipeline").start();
 		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "promote-to-live", ENV.PRODUCT + "-cicd"));
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "promote-to-live", ENV.CICD));
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -299,9 +288,16 @@ public class OpenShiftClient {
 	}
 	
 	private void executePipeline(IBuildConfig pipeline) {
+		executePipeline(pipeline, new HashMap<String, String>());
+	}
+	
+	private void executePipeline(IBuildConfig pipeline, Map<String, String> parameters) {
 		pipeline.accept(new CapabilityVisitor<IBuildTriggerable, IBuild>() {
             @Override
             public IBuild visit(IBuildTriggerable capability) {
+            	for (String parameter : parameters.keySet()) {
+            		capability.setEnvironmentVariable(parameter, parameters.get(parameter));
+            	}
                 return capability.trigger();
             }
         }, null);
