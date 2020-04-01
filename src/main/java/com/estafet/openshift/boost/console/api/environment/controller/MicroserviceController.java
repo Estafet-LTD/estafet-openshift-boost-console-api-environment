@@ -26,7 +26,7 @@ public class MicroserviceController {
 	}
 	
 	@GetMapping("/environment/{env}/app/{app}")
-	public EnvironmentApp getMicroservice(@PathVariable String env, @PathVariable String app) {
+	public Environment getMicroservice(@PathVariable String env, @PathVariable String app) {
 		return microserviceService.getMicroservice(env, app);
 	}
 

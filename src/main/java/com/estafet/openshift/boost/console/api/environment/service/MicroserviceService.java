@@ -51,16 +51,20 @@ public class MicroserviceService {
 		}
 	}
 	
-	public EnvironmentApp getMicroservice(String envId, String appId) {
-	List<App> envApps = envDAO.getEnv(envId).getApps();
-	EnvironmentApp ennvironmentApp = new EnvironmentApp(); 
+	public Environment getMicroservice(String envId, String appId) {
+	Environment environment = new Environment();
+	Env env = envDAO.getEnv(envId);	
+	List<App> envApps = env.getApps();
 	for(App app : envApps) {
 		if (app.getName().equals(appId)) {
-			ennvironmentApp = app.getEnvironmentApp();
+			envApps.clear();
+			envApps.add(app);
+			env.setApps(envApps);
+			environment = env.getEnvironment();
 			break;
 		}
 	}
-	return ennvironmentApp;
+	return environment;
 }
 
 	public Environment doAction(String env, String app, String action) {
