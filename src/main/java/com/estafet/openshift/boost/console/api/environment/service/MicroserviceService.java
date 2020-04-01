@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
+import com.estafet.openshift.boost.console.api.environment.model.App;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.environments.Environment;
@@ -48,6 +49,16 @@ public class MicroserviceService {
 			return envs;
 		}
 	}
+	
+	public App getMicroservice(String envId, String appId) {
+	List<App> envApps = envDAO.getEnv(envId).getApps();
+	for(App app : envApps) {
+		if (app.getName().equals(appId)) {
+			return app;
+		}
+	}
+	return null;
+}
 
 	public Environment doAction(String env, String app, String action) {
 		if (env.equals("build")) {
