@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estafet.openshift.boost.console.api.environment.model.App;
 import com.estafet.openshift.boost.console.api.environment.service.MicroserviceService;
 import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @RestController
 public class MicroserviceController {
@@ -26,7 +26,7 @@ public class MicroserviceController {
 	}
 	
 	@GetMapping("/environment/{env}/app/{app}")
-	public App getMicroservice(@PathVariable String env, @PathVariable String app) {
+	public EnvironmentApp getMicroservice(@PathVariable String env, @PathVariable String app) {
 		return microserviceService.getMicroservice(env, app);
 	}
 

@@ -12,6 +12,7 @@ import com.estafet.openshift.boost.console.api.environment.model.App;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Service
 public class MicroserviceService {
@@ -50,14 +51,16 @@ public class MicroserviceService {
 		}
 	}
 	
-	public App getMicroservice(String envId, String appId) {
+	public EnvironmentApp getMicroservice(String envId, String appId) {
 	List<App> envApps = envDAO.getEnv(envId).getApps();
+	EnvironmentApp ennvironmentApp = new EnvironmentApp(); 
 	for(App app : envApps) {
 		if (app.getName().equals(appId)) {
-			return app;
+			ennvironmentApp = app.getEnvironmentApp();
+			break;
 		}
 	}
-	return null;
+	return ennvironmentApp;
 }
 
 	public Environment doAction(String env, String app, String action) {

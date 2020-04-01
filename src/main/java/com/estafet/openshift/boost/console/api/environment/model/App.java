@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
+import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -149,6 +151,17 @@ public class App {
 				+ deployed + ", updatedDate=" + updatedDate + "]";
 	}
 
+	
+	public EnvironmentApp getEnvironmentApp() {
+		EnvironmentApp environmentApp = EnvironmentApp.builder()
+				.setDeployed(isDeployed())
+				.setDeployedDate(deployedDate)
+				.setName(name)
+				.setVersion(version)
+				.build();
+		return environmentApp;
+	}
+	
 	public static AppBuilder builder() {
 		return new AppBuilder();
 	}
