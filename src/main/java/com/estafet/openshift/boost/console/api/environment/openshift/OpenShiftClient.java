@@ -212,17 +212,11 @@ public class OpenShiftClient {
 	private Map<String, String> getParameters(String app) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		String repoUrl = repoUrl(app);
-		parameters.put("GITHUB", github(repoUrl));
+		parameters.put("GITHUB", ENV.GITHUB);
 		parameters.put("REPO", repoUri(repoUrl));
 		parameters.put("PRODUCT", ENV.PRODUCT);
 		parameters.put("MICROSERVICE", app);
 		return parameters;
-	}
-	
-	private String github(String repoUrl) {
-		Matcher matcher = pattern.matcher(repoUrl);
-		matcher.find();
-		return matcher.group(2);
 	}
 	
 	private String repoUri(String repoUrl) {
@@ -235,7 +229,11 @@ public class OpenShiftClient {
 	public void executeBuildAllPipeline() {
 		Span span = tracer.buildSpan("executeBuildAllPipeline").start();
 		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-all", ENV.CICD));
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("GITHUB", ENV.GITHUB);
+			parameters.put("REPO", System.getenv("REPO"));
+			parameters.put("PRODUCT", ENV.PRODUCT);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-all", ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {

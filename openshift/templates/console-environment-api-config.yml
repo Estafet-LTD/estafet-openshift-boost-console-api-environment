@@ -40,7 +40,13 @@ parameters:
   required: true     
 - description: Defines the openshift admin password
   name: OPENSHIFT_PASSWORD
-  required: true          
+  required: true      
+- description: Defines the github organisation
+  name: GITHUB
+  required: true 
+- description: Defines the github product repo
+  name: PRODUCT_REPO
+  required: true         
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
@@ -84,6 +90,8 @@ objects:
                 value: ${OPENSHIFT_USER}   
               - name: OPENSHIFT_PASSWORD
                 value: ${OPENSHIFT_PASSWORD}   
+              - name: PRODUCT_REPO
+                value: ${PRODUCT_REPO}
               - name: JAEGER_SAMPLER_TYPE
                 value: const
               - name: JAEGER_SAMPLER_PARAM
