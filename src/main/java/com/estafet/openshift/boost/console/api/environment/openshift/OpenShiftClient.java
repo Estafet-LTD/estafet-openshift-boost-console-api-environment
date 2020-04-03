@@ -231,7 +231,7 @@ public class OpenShiftClient {
 		try {
 			Map<String, String> parameters = new HashMap<String, String>();
 			parameters.put("GITHUB", ENV.GITHUB);
-			parameters.put("REPO", System.getenv("REPO"));
+			parameters.put("REPO", System.getenv("PRODUCT_REPO"));
 			parameters.put("PRODUCT", ENV.PRODUCT);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-all", ENV.CICD), parameters);
 		} catch (RuntimeException e) {
