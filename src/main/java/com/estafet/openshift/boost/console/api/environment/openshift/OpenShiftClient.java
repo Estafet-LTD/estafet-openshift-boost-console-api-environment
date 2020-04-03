@@ -200,18 +200,23 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeBuildPipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			Map<String, String> parameters = new HashMap<String, String>();
-			String repoUrl = repoUrl(app);
-			parameters.put("GITHUB", github(repoUrl));
-			parameters.put("REPO", repoUri(repoUrl));
-			parameters.put("PRODUCT", ENV.PRODUCT);
-			parameters.put("MICROSERVICE", app);
+			Map<String, String> parameters = getParameters(app);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
 			span.finish();
 		}
+	}
+
+	private Map<String, String> getParameters(String app) {
+		Map<String, String> parameters = new HashMap<String, String>();
+		String repoUrl = repoUrl(app);
+		parameters.put("GITHUB", github(repoUrl));
+		parameters.put("REPO", repoUri(repoUrl));
+		parameters.put("PRODUCT", ENV.PRODUCT);
+		parameters.put("MICROSERVICE", app);
+		return parameters;
 	}
 	
 	private String github(String repoUrl) {
@@ -243,7 +248,8 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeReleasePipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-" + app, ENV.CICD));
+			Map<String, String> parameters = getParameters(app);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-" + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -269,7 +275,7 @@ public class OpenShiftClient {
 		try {
 			span.setBaggageItem("env", env);
 			span.setBaggageItem("app", app);
-			Map<String, String> parameters = new HashMap<String, String>();
+			Map<String, String> parameters = getParameters(app);
 			parameters.put("PROJECT", ENV.namespace(env));
 			String pipeline;
 			if (envDAO.getEnv(env).getNext().equals("prod")) {
