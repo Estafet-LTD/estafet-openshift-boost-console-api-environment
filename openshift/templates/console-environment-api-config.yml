@@ -92,6 +92,8 @@ objects:
                 value: ${OPENSHIFT_PASSWORD}   
               - name: PRODUCT_REPO
                 value: ${PRODUCT_REPO}
+              - name: GITHUB
+                value: ${GITHUB}
               - name: JAEGER_SAMPLER_TYPE
                 value: const
               - name: JAEGER_SAMPLER_PARAM
