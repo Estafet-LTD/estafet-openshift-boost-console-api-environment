@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import com.estafet.openshift.boost.commons.lib.date.DateUtils;
-import com.estafet.openshift.boost.messages.environments.Environment;
 import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

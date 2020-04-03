@@ -12,7 +12,6 @@ import com.estafet.openshift.boost.console.api.environment.model.App;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.environments.Environment;
-import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @Service
 public class MicroserviceService {

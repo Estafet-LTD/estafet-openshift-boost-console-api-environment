@@ -5,6 +5,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,7 @@ import io.opentracing.tag.Tags;
 public class OpenShiftClient {
 
 	private static final Logger log = LoggerFactory.getLogger(OpenShiftClient.class);
+	private static Pattern pattern = Pattern.compile("(https:\\/\\/github\\.com\\/)(.+)\\/(.+)");
 	
 	@Autowired
 	private Tracer tracer;
@@ -48,6 +51,24 @@ public class OpenShiftClient {
 				.withUserName(ENV.OPENSHIFT_USER)
 				.withPassword(ENV.OPENSHIFT_PASSWORD)
 				.build();
+	}
+	
+	@Cacheable(cacheNames = { "build" })
+	@SuppressWarnings("deprecation")
+	public IBuildConfig getBuildConfig(String app) {
+		Span span = tracer.buildSpan("OpenShiftClient.getBuild").start();
+		try {
+			span.setBaggageItem("app", app);
+			return (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, app, ENV.PRODUCT + "-build");
+		} catch (RuntimeException e) {
+			throw handleException(span, e);
+		} finally {
+			span.finish();
+		}
+	}
+	
+	public String repoUrl(String app) {
+		return new BuildConfigParser(getBuildConfig(app)).getGitRepository();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -179,12 +200,30 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeBuildPipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.CICD));
+			Map<String, String> parameters = new HashMap<String, String>();
+			String repoUrl = repoUrl(app);
+			parameters.put("GITHUB", github(repoUrl));
+			parameters.put("REPO", repoUri(repoUrl));
+			parameters.put("PRODUCT", ENV.PRODUCT);
+			parameters.put("MICROSERVICE", app);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
 			span.finish();
 		}
+	}
+	
+	private String github(String repoUrl) {
+		Matcher matcher = pattern.matcher(repoUrl);
+		matcher.find();
+		return matcher.group(2);
+	}
+	
+	private String repoUri(String repoUrl) {
+		Matcher matcher = pattern.matcher(repoUrl);
+		matcher.find();
+		return matcher.group(3);
 	}
 	
 	@SuppressWarnings("deprecation")

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.estafet.openshift.boost.console.api.environment.service.MicroserviceService;
 import com.estafet.openshift.boost.messages.environments.Environment;
-import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 
 @RestController
 public class MicroserviceController {
