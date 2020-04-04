@@ -37,7 +37,7 @@ import io.opentracing.tag.Tags;
 public class OpenShiftClient {
 
 	private static final Logger log = LoggerFactory.getLogger(OpenShiftClient.class);
-	private static Pattern pattern = Pattern.compile("(https:\\/\\/github\\.com\\/)(.+)\\/(.+)");
+	private static Pattern pattern = Pattern.compile("(https:\\/\\/.+\\/)(.+)\\/(.+)");
 	
 	@Autowired
 	private Tracer tracer;
