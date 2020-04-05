@@ -93,12 +93,14 @@ public class OpenShiftClient {
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean isEnvironmentTestPassed(String namespace) {
+	public boolean isEnvironmentTestPassed(IProject project) {
 		Span span = tracer.buildSpan("isEnvironmentTestPassed").start();
 		try {			
-			span.setBaggageItem("namespace", namespace);
-			String testPassed = getClient().get(ResourceKind.PROJECT, namespace).getLabels().get("test-passed");
-			log.info("testPassed - " + namespace + " - " + testPassed);
+			span.setBaggageItem("namespace", project.getName());
+			Map<String, String> labels = project.getLabels();
+			String testPassed = labels.get("test-passed");
+			log.info(labels.toString());
+			log.info("testPassed - " + project.getName() + " - " + testPassed);
 			return Boolean.parseBoolean(testPassed);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);

@@ -43,29 +43,29 @@ public class EnvFactory {
 			envs.add(createEnv(project, next));
 			return getEnvs(next, projects, envs);
 		} else if (namespace.equals(ENV.PROD)) {
-			envs.add(createProdEnv("green"));
-			envs.add(createProdEnv("blue"));
+			envs.add(createProdEnv("green", project));
+			envs.add(createProdEnv("blue", project));
 			return envs;
 		}
 		throw new RuntimeException("cannot create Env for namespace - " + namespace);
 	}
 
-	private Env createProdEnv(String name) {
+	private Env createProdEnv(String name, IProject project) {
 		log.info("createProEnv - " + name);
 		Env env =  Env.builder()
 					.setName(name)
 					.setDisplayName(isLive(name) ? "Live" : "Staging")
 					.setLive(isLive(name))
-					.setTested(prodTestedStatus(name))
+					.setTested(prodTestedStatus(name, project))
 					.build();
 		return addApps(env, ENV.PROD);
 	}
 
-	public Boolean prodTestedStatus(String name) {
+	public Boolean prodTestedStatus(String name, IProject project) {
 		if (isLive(name)) {
 			return null;
 		} else {
-			return client.isEnvironmentTestPassed(ENV.PROD);	
+			return client.isEnvironmentTestPassed(project);	
 		}
 	}
 
@@ -84,7 +84,7 @@ public class EnvFactory {
 		if (project.getName().equals(ENV.BUILD)) {
 			return null;
 		} 
-		return client.isEnvironmentTestPassed(project.getName());
+		return client.isEnvironmentTestPassed(project);
 	}
 
 	private Env addApps(Env env, String namespace) {
