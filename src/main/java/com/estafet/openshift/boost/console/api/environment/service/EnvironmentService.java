@@ -52,7 +52,7 @@ public class EnvironmentService {
 	public List<Env> updateEnvs() {
 		List<Env> result = new ArrayList<Env>();
 		for (Env env : envFactory.getEnvs()) {
-			log.info("scanned -" + env.toString());
+			log.info("scanned - " + env.toString());
 			Env savedEnv = envDAO.getEnv(env.getName());
 			if (savedEnv == null) {
 				savedEnv = envDAO.createEnv(env);

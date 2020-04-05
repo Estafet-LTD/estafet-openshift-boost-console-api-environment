@@ -97,7 +97,9 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("isEnvironmentTestPassed").start();
 		try {			
 			span.setBaggageItem("namespace", namespace);
-			return Boolean.parseBoolean(getClient().get(ResourceKind.PROJECT, namespace).getLabels().get("test-passed"));
+			String testPassed = getClient().get(ResourceKind.PROJECT, namespace).getLabels().get("test-passed");
+			log.info("testPassed - " + namespace + " - " + testPassed);
+			return Boolean.parseBoolean(testPassed);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
