@@ -200,7 +200,7 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeBuildPipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			Map<String, String> parameters = getParameters(app);
+			Map<String, String> parameters = getAppParameters(app);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
@@ -209,7 +209,7 @@ public class OpenShiftClient {
 		}
 	}
 
-	private Map<String, String> getParameters(String app) {
+	private Map<String, String> getAppParameters(String app) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		String repoUrl = repoUrl(app);
 		parameters.put("GITHUB", ENV.GITHUB);
@@ -246,7 +246,7 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeReleasePipeline").start();
 		try {
 			span.setBaggageItem("app",app);
-			Map<String, String> parameters = getParameters(app);
+			Map<String, String> parameters = getAppParameters(app);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-" + app, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
@@ -259,7 +259,11 @@ public class OpenShiftClient {
 	public void executeReleaseAllPipeline() {
 		Span span = tracer.buildSpan("executeReleaseAllPipeline").start();
 		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-all", ENV.CICD));
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("GITHUB", ENV.GITHUB);
+			parameters.put("REPO", System.getenv("PRODUCT_REPO"));
+			parameters.put("PRODUCT", ENV.PRODUCT);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-all", ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
@@ -273,7 +277,7 @@ public class OpenShiftClient {
 		try {
 			span.setBaggageItem("env", env);
 			span.setBaggageItem("app", app);
-			Map<String, String> parameters = getParameters(app);
+			Map<String, String> parameters = getAppParameters(app);
 			parameters.put("PROJECT", ENV.namespace(env));
 			String pipeline;
 			if (envDAO.getEnv(env).getNext().equals("prod")) {
@@ -293,6 +297,7 @@ public class OpenShiftClient {
 	public void executePromoteAllPipeline(String env) {
 		Span span = tracer.buildSpan("executePromoteAllPipeline").start();
 		try {
+			Map<String, String> parameters = getEnvParameters(env);
 			span.setBaggageItem("env", env);
 			String pipeline;
 			if (envDAO.getEnv(env).getNext().equals("prod")) {
@@ -300,12 +305,21 @@ public class OpenShiftClient {
 			} else {
 				pipeline = "promote-all-";
 			}
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline + env, ENV.CICD));
+			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline + env, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
 			span.finish();
 		}
+	}
+
+	private Map<String, String> getEnvParameters(String env) {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("GITHUB", ENV.GITHUB);
+		parameters.put("REPO", System.getenv("PRODUCT_REPO"));
+		parameters.put("PRODUCT", ENV.PRODUCT);
+		parameters.put("PROJECT", ENV.namespace(env));
+		return parameters;
 	}
 	
 	@SuppressWarnings("deprecation")
