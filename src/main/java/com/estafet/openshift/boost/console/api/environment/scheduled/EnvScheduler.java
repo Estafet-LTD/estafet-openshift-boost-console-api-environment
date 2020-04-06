@@ -27,6 +27,7 @@ public class EnvScheduler {
 		for (Env env : environmentService.updateEnvs()) {
 			envProducer.sendMessage(env.getEnvironment());
 		}
+		log.info("environment data refreshed");
 	}
 
 }
