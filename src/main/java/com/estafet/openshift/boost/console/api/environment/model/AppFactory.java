@@ -33,7 +33,7 @@ public class AppFactory {
 	}
 	
 	public App getApp(IDeploymentConfig dc, IService service) {
-		log.info("app - " + dc.getName());
+		log.debug("app - " + dc.getName());
 		if (dc == null || service == null) {
 			return null;
 		} else {

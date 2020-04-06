@@ -81,7 +81,7 @@ public class OpenShiftClient {
 			List<IProject> projects = getClient().list(ResourceKind.PROJECT, labels);
 			Map<String, IProject> result = new HashMap<String, IProject>();
 			for (IProject project : projects) {
-				log.info("project - " + project.getName());
+				log.debug("project - " + project.getName());
 				result.put(project.getName(), project);
 			}
 			return result;
@@ -99,8 +99,8 @@ public class OpenShiftClient {
 			span.setBaggageItem("namespace", project.getName());
 			Map<String, String> labels = project.getLabels();
 			String testPassed = labels.get("test-passed");
-			log.info(labels.toString());
-			log.info("testPassed - " + project.getName() + " - " + testPassed);
+			log.debug(labels.toString());
+			log.debug("testPassed - " + project.getName() + " - " + testPassed);
 			return Boolean.parseBoolean(testPassed);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);

@@ -21,7 +21,7 @@ public class EnvScheduler {
 	@Autowired
 	private EnvProducer envProducer;
 
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 30000)
 	public void execute() {
 		log.info("refreshing environment data");
 		for (Env env : environmentService.updateEnvs()) {

@@ -51,7 +51,7 @@ public class EnvFactory {
 	}
 
 	private Env createProdEnv(String name, IProject project) {
-		log.info("createProEnv - " + name);
+		log.debug("createProEnv - " + name);
 		Env env =  Env.builder()
 					.setName(name)
 					.setDisplayName(isLive(name) ? "Live" : "Staging")
@@ -70,7 +70,7 @@ public class EnvFactory {
 	}
 
 	private Env createEnv(IProject project, String next) {
-		log.info("createEnv - " + project.getName());
+		log.debug("createEnv - " + project.getName());
 		Env env = Env.builder()
 					.setName(envName(project.getName()))
 					.setDisplayName(project.getLabels().get("display"))

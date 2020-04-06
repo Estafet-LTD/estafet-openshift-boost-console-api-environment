@@ -17,7 +17,7 @@ public class EnvProducer {
     private JmsTemplate jmsTemplate;
 
     public void sendMessage(Environment env) {
-    	log.info(env.toJSON());
+    	log.debug(env.toJSON());
         jmsTemplate.setPubSubDomain(true);
         jmsTemplate.convertAndSend("env.topic", env.toJSON());
     }
