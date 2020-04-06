@@ -303,13 +303,14 @@ public class OpenShiftClient {
 		try {
 			Map<String, String> parameters = getEnvParameters(env);
 			span.setBaggageItem("env", env);
-			String pipeline;
+			String name;
 			if (envDAO.getEnv(env).getNext().equals("prod")) {
-				pipeline = "promote-all-to-prod-";
+				name = "promote-all-to-prod";
 			} else {
-				pipeline = "promote-all-";
+				name = "promote-all-" + env;
 			}
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline + env, ENV.CICD), parameters);
+			IBuildConfig pipeline = getClient().get(ResourceKind.BUILD_CONFIG, name, ENV.CICD);
+			executePipeline(pipeline, parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
