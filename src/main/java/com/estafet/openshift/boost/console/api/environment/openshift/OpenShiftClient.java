@@ -330,9 +330,11 @@ public class OpenShiftClient {
 	public void executeTestPipeline(String env) {
 		Span span = tracer.buildSpan("executeTestPipeline").start();
 		try {
+			IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.CICD);
 			Map<String, String> parameters = getEnvParameters(env);
+			parameters.put("REPO",  new BuildConfigParser(testPipeline).getGitRepository());
 			span.setBaggageItem("env", env);
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.CICD), parameters);
+			executePipeline(testPipeline, parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
