@@ -331,7 +331,8 @@ public class OpenShiftClient {
 	public void executeTestPipeline(String env) {
 		Span span = tracer.buildSpan("executeTestPipeline").start();
 		try {
-			IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "qa-" + env, ENV.CICD);
+			String pipeline = env.equals("blue") || env.equals("green") ? "qa-prod" : "qa-" + env;
+			IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD);
 			Map<String, String> parameters = getEnvParameters(env);
 			String gitRepository = new BuildConfigParser(testPipeline).getGitRepository();
 			parameters.put("REPO",  repoUri(gitRepository));
