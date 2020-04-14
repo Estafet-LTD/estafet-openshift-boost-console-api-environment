@@ -66,6 +66,20 @@ public class OpenShiftClient {
 			span.finish();
 		}
 	}
+
+	@SuppressWarnings("deprecation")
+	public List<IBuildConfig> getBuildConfigs() {
+		Span span = tracer.buildSpan("OpenShiftClient.getBuildConfigs").start();
+		try {
+			Map<String, String> labels = new HashMap<String, String>();
+			labels.put("product", ENV.PRODUCT);
+			return getClient().list(ResourceKind.BUILD_CONFIG, ENV.PRODUCT + "-build", labels);
+		} catch (RuntimeException e) {
+			throw handleException(span, e);
+		} finally {
+			span.finish();
+		}
+	}
 	
 	public String repoUrl(String app) {
 		return new BuildConfigParser(getBuildConfig(app)).getGitRepository();
