@@ -18,7 +18,7 @@ public class GitHubService {
 		if (hook.getHook() != null) {
 			return "success";
 		} else {
-			String url = hook.getRepository().getCloneUrl();
+			String url = hook.getRepository().getSvnUrl();
 			for (IBuildConfig buildConfig : client.getBuildConfigs()) {
 				if (new BuildConfigParser(buildConfig).getGitRepository().equalsIgnoreCase(url)) {
 					client.executeBuildPipeline(buildConfig.getName());
