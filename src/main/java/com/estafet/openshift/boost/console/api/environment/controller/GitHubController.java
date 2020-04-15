@@ -16,7 +16,7 @@ public class GitHubController {
 	@Autowired
 	private GitHubService gitHubService;
 
-	@PostMapping("/hooks")
+	@PostMapping("/github/hooks")
 	public ResponseEntity<String> webhook(@RequestBody GitHubHook hook) {
 		return new ResponseEntity<String>(gitHubService.webhook(hook), HttpStatus.OK);
 	}

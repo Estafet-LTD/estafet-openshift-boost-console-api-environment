@@ -16,13 +16,13 @@ public class GitHubService {
 
 	public String webhook(GitHubHook hook) {
 		if (hook.getHook() != null) {
-			return "success";
+			return "ping_success";
 		} else {
 			String url = hook.getRepository().getSvnUrl();
 			for (IBuildConfig buildConfig : client.getBuildConfigs()) {
 				if (new BuildConfigParser(buildConfig).getGitRepository().equalsIgnoreCase(url)) {
 					client.executeBuildPipeline(buildConfig.getName());
-					return "success";
+					return "build_success";
 				}
 			}
 			throw new RuntimeException("Cannot find buildconfig for webhook");
