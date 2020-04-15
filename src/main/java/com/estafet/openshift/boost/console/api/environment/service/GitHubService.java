@@ -12,10 +12,10 @@ import com.openshift.restclient.model.IBuildConfig;
 
 @Service
 public class GitHubService {
-	
+
 	@Autowired
 	private OpenShiftClient client;
-	
+
 	@Autowired
 	private EnvDAO envDAO;
 
@@ -23,9 +23,8 @@ public class GitHubService {
 		if (hook.getHook() != null) {
 			return "ping_success";
 		} else {
-			String url = hook.getRepository().getSvnUrl();
 			for (IBuildConfig buildConfig : client.getBuildConfigs()) {
-				if (compareURL(url, buildConfig)) {
+				if (compareURL(hook, buildConfig)) {
 					client.executeBuildPipeline(buildConfig.getName());
 					return "build_success";
 				}
@@ -33,18 +32,19 @@ public class GitHubService {
 			for (Env env : envDAO.getEnvs()) {
 				if (!env.getName().equals("build")) {
 					IBuildConfig buildConfig = client.getTestBuildConfig(env.getName());
-					if (compareURL(url, buildConfig)) {
+					if (compareURL(hook, buildConfig)) {
 						client.executeTestPipeline(env.getName());
 						return "test_success";
 					}
 				}
 			}
-			throw new RuntimeException("Cannot find buildconfig for webhook");
+			return "no_pipline_triggered";
 		}
 	}
 
-	private boolean compareURL(String url, IBuildConfig buildConfig) {
-		return new BuildConfigParser(buildConfig).getGitRepository().equalsIgnoreCase(url);
+	private boolean compareURL(GitHubHook hook, IBuildConfig buildConfig) {
+		return hook.getRef().equals("refs/heads/master") && new BuildConfigParser(buildConfig).getGitRepository()
+				.equalsIgnoreCase(hook.getRepository().getSvnUrl());
 	}
 
 }
