@@ -345,8 +345,7 @@ public class OpenShiftClient {
 	public void executeTestPipeline(String env) {
 		Span span = tracer.buildSpan("executeTestPipeline").start();
 		try {
-			String pipeline = env.equals("blue") || env.equals("green") ? "qa-prod" : "qa-" + env;
-			IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD);
+			IBuildConfig testPipeline = getTestBuildConfig(env);
 			Map<String, String> parameters = getEnvParameters(env);
 			String gitRepository = new BuildConfigParser(testPipeline).getGitRepository();
 			parameters.put("REPO",  repoUri(gitRepository));
@@ -357,6 +356,13 @@ public class OpenShiftClient {
 		} finally {
 			span.finish();
 		}
+	}
+
+	@Cacheable(cacheNames = { "test" })
+	public IBuildConfig getTestBuildConfig(String env) {
+		String pipeline = env.equals("blue") || env.equals("green") ? "qa-prod" : "qa-" + env;
+		IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD);
+		return testPipeline;
 	}
 	
 	@SuppressWarnings("deprecation")
