@@ -299,11 +299,11 @@ public class OpenShiftClient {
 			parameters.put("PROJECT", ENV.namespace(env));
 			String pipeline;
 			if (envDAO.getEnv(env).getNext().equals("prod")) {
-				pipeline = "promote-to-prod-";
+				pipeline = "promote-to-prod-" + app;
 			} else {
-				pipeline = "promote-";
+				pipeline = "promote-" + "env" + "-" + app;
 			}
-			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline + app, ENV.CICD), parameters);
+			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
