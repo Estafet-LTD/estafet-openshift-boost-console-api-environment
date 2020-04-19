@@ -301,7 +301,7 @@ public class OpenShiftClient {
 			if (envDAO.getEnv(env).getNext().equals("prod")) {
 				pipeline = "promote-to-prod-" + app;
 			} else {
-				pipeline = "promote-" + "env" + "-" + app;
+				pipeline = "promote-" + env + "-" + app;
 			}
 			executePipeline(getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD), parameters);
 		} catch (RuntimeException e) {
