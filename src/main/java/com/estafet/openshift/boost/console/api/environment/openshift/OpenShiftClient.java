@@ -369,16 +369,14 @@ public class OpenShiftClient {
 	public void executePromoteToLivePipeline() {
 		Span span = tracer.buildSpan("executePromoteToLivePipeline").start();
 		try {
-			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "promote-to-live", ENV.CICD));
+			Map<String, String> parameters = new HashMap<String, String>();
+			parameters.put("PRODUCT", ENV.PRODUCT);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "promote-to-live", ENV.CICD), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
 			span.finish();
 		}
-	}
-	
-	private void executePipeline(IBuildConfig pipeline) {
-		executePipeline(pipeline, new HashMap<String, String>());
 	}
 	
 	private void executePipeline(IBuildConfig pipeline, Map<String, String> parameters) {
