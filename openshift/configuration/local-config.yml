@@ -6,7 +6,7 @@ config_map:
   - name: OPENSHIFT_PASSWORD
     value: "{{ openshift.password }}"    
   - name: PRODUCT_REPO
-    value: "{{ environments.repo }}"   
+    value: "{{ product.repo }}"   
   - name: GITHUB
     value: "{{ github.org }}"    
   - name: PRODUCT
