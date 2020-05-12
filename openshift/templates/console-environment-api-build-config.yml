@@ -33,6 +33,9 @@ parameters:
 - description: Defines docker image label
   name: DOCKER_IMAGE_LABEL
   required: true        
+- description: Defines the product that this template is related to
+  name: PRODUCT
+  required: true     
 - description: Maven mirror url
   name: MAVEN_MIRROR_URL
   value: http://nexus.nexus.svc:8081/nexus/content/groups/public
