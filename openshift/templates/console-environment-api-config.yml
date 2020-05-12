@@ -13,11 +13,18 @@ parameters:
   required: true
 - description: Defines max memory
   name: MAX_MEMORY
-  value: 650Mi
   required: true  
 - description: Defines min memory
   name: MIN_MEMORY
-  value: 100Mi
+  required: true
+- description: Defines max cpu
+  name: MAX_CPU
+  required: true  
+- description: Defines min memory
+  name: MIN_CPU
+  required: true
+- description: Defines number of replicas
+  name: REPLICAS
   required: true
 - description: Defines the namespace for the image stream
   name: DOCKER_NAMESPACE
@@ -28,25 +35,7 @@ parameters:
   required: true      
 - description: Defines docker registry
   name: DOCKER_IMAGE_LABEL
-  required: true    
-- description: Defines the product that this template is related to
-  name: PRODUCT
-  required: true     
-- description: Defines the openshift host and port
-  name: OPENSHIFT_HOST_PORT
-  required: true     
-- description: Defines the openshift admin user
-  name: OPENSHIFT_USER
-  required: true     
-- description: Defines the openshift admin password
-  name: OPENSHIFT_PASSWORD
-  required: true      
-- description: Defines the github organisation
-  name: GITHUB
-  required: true 
-- description: Defines the github product repo
-  name: PRODUCT_REPO
-  required: true         
+  required: true       
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
@@ -58,7 +47,7 @@ objects:
     name: ${MICROSERVICE}
     namespace: ${NAMESPACE}
   spec:
-    replicas: 1
+    replicas: ${REPLICAS}
     revisionHistoryLimit: 10
     selector:
       app: ${MICROSERVICE}
@@ -83,37 +72,90 @@ objects:
         containers:
           - env:
               - name: PRODUCT
-                value: ${PRODUCT}
-              - name: OPENSHIFT_HOST_PORT
-                value: ${OPENSHIFT_HOST_PORT}   
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: PRODUCT                
+              - name: OPENSHIFT_HOST_PORT 
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: OPENSHIFT_HOST_PORT                  
               - name: OPENSHIFT_USER
-                value: ${OPENSHIFT_USER}   
-              - name: OPENSHIFT_PASSWORD
-                value: ${OPENSHIFT_PASSWORD}   
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: OPENSHIFT_USER                
+              - name: OPENSHIFT_PASSWORD   
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: OPENSHIFT_PASSWORD                
               - name: PRODUCT_REPO
-                value: ${PRODUCT_REPO}
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: PRODUCT_REPO                
               - name: GITHUB
-                value: ${GITHUB}
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: GITHUB
+              - name: JAEGER_SERVICE_NAME
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JAEGER_SERVICE_NAME
               - name: JAEGER_SAMPLER_TYPE
-                value: const
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JAEGER_SAMPLER_TYPE
               - name: JAEGER_SAMPLER_PARAM
-                value: '1'                
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JAEGER_SAMPLER_PARAM
               - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
-                value: jaeger-agent.${NAMESPACE}.svc:5778
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JAEGER_SAMPLER_MANAGER_HOST_PORT
               - name: JAEGER_AGENT_HOST
-                value: jaeger-agent.${NAMESPACE}.svc           
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JAEGER_AGENT_HOST         
               - name: JBOSS_A_MQ_BROKER_PASSWORD
-                value: amq
+                valueFrom:
+                  secretKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JBOSS_A_MQ_BROKER_PASSWORD
               - name: JBOSS_A_MQ_BROKER_URL
-                value: 'tcp://broker-amq-tcp.${NAMESPACE}.svc:61616'
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JBOSS_A_MQ_BROKER_URL
               - name: JBOSS_A_MQ_BROKER_USER
-                value: amq                  
+                valueFrom:
+                  secretKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: JBOSS_A_MQ_BROKER_USER               
               - name: CONSOLE_ENVIRONMENT_API_DB_PASSWORD
-                value: welcome1
+                valueFrom:
+                  secretKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: CONSOLE_ENVIRONMENT_API_DB_PASSWORD
               - name: CONSOLE_ENVIRONMENT_API_DB_USER
-                value: postgres
+                valueFrom:
+                  secretKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: CONSOLE_ENVIRONMENT_API_DB_USER
               - name: CONSOLE_ENVIRONMENT_API_JDBC_URL   
-                value: jdbc:postgresql://postgresql.${NAMESPACE}.svc:5432/${NAMESPACE}-${MICROSERVICE}                               
+                valueFrom:
+                  configMapKeyRef:
+                    name: ${MICROSERVICE} 
+                    key: CONSOLE_ENVIRONMENT_API_JDBC_URL                               
             image: ${DOCKER_REGISTRY}/${DOCKER_NAMESPACE}/${MICROSERVICE}:${DOCKER_IMAGE_LABEL}
             imagePullPolicy: Always
             name: ${MICROSERVICE}
@@ -136,10 +178,10 @@ objects:
                 scheme: HTTP
             resources:
               limits:
-                cpu: '1'
+                cpu: ${MAX_CPU}
                 memory: ${MAX_MEMORY}
               requests:
-                cpu: 50m
+                cpu: ${MIN_CPU}
                 memory: ${MIN_MEMORY}
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
@@ -165,7 +207,6 @@ objects:
     creationTimestamp: null
     labels:
       app: ${MICROSERVICE}
-      product: ${PRODUCT}
     name: ${MICROSERVICE}
     namespace: ${NAMESPACE}
   spec:
