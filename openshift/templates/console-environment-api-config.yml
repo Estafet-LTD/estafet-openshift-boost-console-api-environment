@@ -86,12 +86,12 @@ objects:
                     key: OPENSHIFT_HOST_PORT                  
               - name: OPENSHIFT_USER
                 valueFrom:
-                  configMapKeyRef:
+                  secretKeyRef:
                     name: ${MICROSERVICE} 
                     key: OPENSHIFT_USER                
               - name: OPENSHIFT_PASSWORD   
                 valueFrom:
-                  configMapKeyRef:
+                  secretKeyRef:
                     name: ${MICROSERVICE} 
                     key: OPENSHIFT_PASSWORD                
               - name: PRODUCT_REPO
