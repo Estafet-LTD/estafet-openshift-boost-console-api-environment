@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.estafet.openshift.boost.console</groupId>
 	<artifactId>estafet-openshift-boost-console-api-environment</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>estafet-openshift-boost-console-api-environment</name>
 
 	<parent>
@@ -50,8 +50,4 @@
             <artifactId>caffeine</artifactId>
         </dependency>					
 	</dependencies>
-
-  <scm>
-    <tag>estafet-openshift-boost-console-api-environment-0.0.5</tag>
-  </scm>
 </project>
