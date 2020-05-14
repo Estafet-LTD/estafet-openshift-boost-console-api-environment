@@ -18,6 +18,6 @@ config_map:
   - name: JAEGER_SAMPLER_PARAM
     value: 1
   - name: JAEGER_SAMPLER_MANAGER_HOST_PORT
-    value: "jaeger-agent.{{ product.name }}-monitoring.svc:5778"    
+    value: "jaeger-agent.{{ project }}.svc:5778"    
   - name: JAEGER_AGENT_HOST
-    value: "jaeger-agent.{{ product.name }}-monitoring.svc"    
+    value: "jaeger-agent.{{ project }}.svc"    
