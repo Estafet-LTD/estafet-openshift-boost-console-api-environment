@@ -1,0 +1,5 @@
+setup:
+  - name: create-postgres-db
+    app: console-environment-api
+    repo: estafet-openshift-boost-console-api-environment  
+    reset_db: false
