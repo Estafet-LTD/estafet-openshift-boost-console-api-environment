@@ -234,6 +234,7 @@ public class OpenShiftClient {
 		parameters.put("REPO", repoUri(repoUrl));
 		parameters.put("PRODUCT", ENV.PRODUCT);
 		parameters.put("MICROSERVICE", app);
+		parameters.put("PRODUCT_REPO", System.getenv("PRODUCT_REPO"));
 		return parameters;
 	}
 	
