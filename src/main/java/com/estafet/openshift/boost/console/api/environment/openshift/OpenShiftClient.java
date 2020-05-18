@@ -214,7 +214,7 @@ public class OpenShiftClient {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void executeNewAppBuildPipeline(String app, String repoUrl) {
+	public void executeBuildPipeline(String app, String repoUrl) {
 		Span span = tracer.buildSpan("executeBuildPipeline").start();
 		try {
 			span.setBaggageItem("app",app);

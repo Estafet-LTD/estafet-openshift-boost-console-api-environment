@@ -49,7 +49,7 @@ public class GitHubService {
 			}
 			String app = getNewApp(hook);
 			if (app != null) {
-				client.executeNewAppBuildPipeline(app, hook.getRepository().getHtmlUrl());
+				client.executeBuildPipeline(app, hook.getRepository().getHtmlUrl());
 				return "build_success";
 			}
 			return "no_pipline_triggered";
