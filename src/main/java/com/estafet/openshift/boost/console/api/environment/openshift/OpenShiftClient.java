@@ -230,7 +230,7 @@ public class OpenShiftClient {
 	private Map<String, String> getAppParameters(String app, String repoUrl) {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("GITHUB", ENV.GITHUB);
-		parameters.put("REPO", repoUrl);
+		parameters.put("REPO", repoUri(repoUrl));
 		parameters.put("PRODUCT", ENV.PRODUCT);
 		parameters.put("MICROSERVICE", app);
 		parameters.put("PRODUCT_REPO", System.getenv("PRODUCT_REPO"));
