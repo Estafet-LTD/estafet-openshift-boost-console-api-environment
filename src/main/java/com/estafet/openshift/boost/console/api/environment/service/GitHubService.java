@@ -1,13 +1,22 @@
 package com.estafet.openshift.boost.console.api.environment.service;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
+import com.estafet.openshift.boost.console.api.environment.model.Microservice;
+import com.estafet.openshift.boost.console.api.environment.model.Microservices;
 import com.estafet.openshift.boost.console.api.environment.openshift.BuildConfigParser;
 import com.estafet.openshift.boost.console.api.environment.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.github.GitHubHook;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.openshift.restclient.model.IBuildConfig;
 
 @Service
@@ -38,7 +47,38 @@ public class GitHubService {
 					}
 				}
 			}
+			String app = getNewApp(hook);
+			if (app != null) {
+				client.executeBuildPipeline(app);
+				return "build_success";
+			}
 			return "no_pipline_triggered";
+		}
+	}
+	
+	private String getNewApp(GitHubHook hook) {
+		String url = "https://github.com/" + ENV.GITHUB + "/" + hook.getRepository().getName() + "/blob/master/setup-environments/vars/microservices-vars.yml";
+		BufferedInputStream in = null;
+		try {
+			in = new BufferedInputStream(new URL(url).openStream());
+			ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+			Microservices microservices = mapper.readValue(in, Microservices.class);
+			for (Microservice microservice : microservices.getMicroservices()) {
+				if (microservice.getRepo().equals(hook.getRepository().getName())) {
+					return microservice.getName();
+				}
+			}
+			return null;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 		}
 	}
 
