@@ -214,6 +214,30 @@ public class OpenShiftClient {
 	}
 
 	@SuppressWarnings("deprecation")
+	public void executeNewAppBuildPipeline(String app, String repoUrl) {
+		Span span = tracer.buildSpan("executeBuildPipeline").start();
+		try {
+			span.setBaggageItem("app",app);
+			Map<String, String> parameters = getAppParameters(app, repoUrl);
+			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-" + app, ENV.CICD), parameters);
+		} catch (RuntimeException e) {
+			throw handleException(span, e);
+		} finally {
+			span.finish();
+		}
+	}
+	
+	private Map<String, String> getAppParameters(String app, String repoUrl) {
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("GITHUB", ENV.GITHUB);
+		parameters.put("REPO", repoUrl);
+		parameters.put("PRODUCT", ENV.PRODUCT);
+		parameters.put("MICROSERVICE", app);
+		parameters.put("PRODUCT_REPO", System.getenv("PRODUCT_REPO"));
+		return parameters;
+	}
+	
+	@SuppressWarnings("deprecation")
 	public void executeBuildPipeline(String app) {
 		Span span = tracer.buildSpan("executeBuildPipeline").start();
 		try {
