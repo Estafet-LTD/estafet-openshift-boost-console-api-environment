@@ -57,7 +57,7 @@ public class GitHubService {
 	}
 	
 	private String getNewApp(GitHubHook hook) {
-		String url = "https://github.com/" + ENV.GITHUB + "/" + hook.getRepository().getName() + "/blob/master/setup-environments/vars/microservices-vars.yml";
+		String url = "https://github.com/" + System.getenv("PRODUCT_REPO") + "/" + hook.getRepository().getName() + "/blob/master/setup-environments/vars/microservices-vars.yml";
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(new URL(url).openStream());
