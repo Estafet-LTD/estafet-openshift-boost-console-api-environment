@@ -193,16 +193,6 @@ objects:
         securityContext: {}
         terminationGracePeriodSeconds: 30
     test: false
-    triggers:
-      - imageChangeParams:
-          automatic: true
-          containerNames:
-            - ${MICROSERVICE}
-          from:
-            kind: ImageStreamTag
-            name: "${MICROSERVICE}:${DOCKER_IMAGE_LABEL}"
-            namespace: ${DOCKER_NAMESPACE}
-        type: ImageChange
 - apiVersion: v1
   kind: Service
   metadata:
