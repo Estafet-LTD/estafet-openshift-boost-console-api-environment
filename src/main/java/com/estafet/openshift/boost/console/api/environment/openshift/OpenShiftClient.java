@@ -385,7 +385,7 @@ public class OpenShiftClient {
 
 	@Cacheable(cacheNames = { "test" })
 	public IBuildConfig getTestBuildConfig(String env) {
-		String pipeline = env.equals("blue") || env.equals("green") ? "qa-prod" : "qa-" + env;
+		String pipeline = env.equals("blue") || env.equals("green") ? "qa-prod-impl" : "qa-" + env + "-impl";
 		IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD);
 		return testPipeline;
 	}
