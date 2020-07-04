@@ -26,9 +26,9 @@ public class BuildConfigParser {
 	}
 
 	public String getGitRepository() {
-		JSONObject spec = ((JSONObject) jo.get("spec"));
-		JSONObject source = ((JSONObject) spec.get("source"));
-		JSONObject git = ((JSONObject) source.get("git"));
+		JSONObject spec = (JSONObject) jo.get("spec");
+		JSONObject source = (JSONObject) spec.get("source");
+		JSONObject git = (JSONObject) source.get("git");
 		return (String)git.get("uri");
 	}
 

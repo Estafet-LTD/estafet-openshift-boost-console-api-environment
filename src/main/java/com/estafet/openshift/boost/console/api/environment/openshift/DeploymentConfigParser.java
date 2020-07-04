@@ -59,7 +59,6 @@ public class DeploymentConfigParser {
 		return image.replaceFirst(Pattern.quote(name) + "\\:", "");
 	}
 
-
 	public String getReadinessPort() {
         return getReadinessAttribute("port");
     }
@@ -69,14 +68,14 @@ public class DeploymentConfigParser {
 	}
 
     private String getReadinessAttribute(String attribute) {
-        JSONObject spec = (JSONObject) jo.get("spec");
-		JSONObject template = (JSONObject) spec.get("template");
-		spec = (JSONObject) template.get("spec");
-		JSONArray containers = (JSONArray) spec.get("containers");
+        JSONObject spec1 = (JSONObject) jo.get("spec");
+		JSONObject template = (JSONObject) spec1.get("template");
+		JSONObject spec2 = (JSONObject) template.get("spec");
+		JSONArray containers = (JSONArray) spec2.get("containers");
 		JSONObject container =   (JSONObject)containers.get(0);
 		JSONObject readinessProbe =   (JSONObject)container.get("readinessProbe");
 		JSONObject httpGet = (JSONObject) readinessProbe.get("httpGet");
-		return (String)httpGet.get(attribute);
+		return httpGet.get(attribute).toString();
     }
 
 }
