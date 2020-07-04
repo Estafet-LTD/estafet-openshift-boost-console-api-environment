@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import com.estafet.openshift.boost.commons.lib.model.API;
 import com.estafet.openshift.boost.console.api.environment.openshift.DeploymentConfigParser;
 import com.estafet.openshift.boost.console.api.environment.openshift.ImageStreamParser;
+import com.estafet.openshift.boost.console.api.environment.openshift.ServiceParser;
 import com.openshift.restclient.model.IDeploymentConfig;
 import com.openshift.restclient.model.IImageStream;
 import com.openshift.restclient.model.IService;
@@ -24,7 +25,7 @@ public class AppFactory {
 			return null;
 		} else {
 			return App.builder()
-					.setDeployed(isDeployed(service))
+					.setDeployed(isDeployed(dc, service))
 					.setDeployedDate(new DeploymentConfigParser(dc).getDeployedDate())
 					.setName(appName(dc))
 					.setVersion(getBuildVersion(buildImage, cicdImage))
@@ -38,7 +39,7 @@ public class AppFactory {
 			return null;
 		} else {
 			return App.builder()
-					.setDeployed(isDeployed(service))
+					.setDeployed(isDeployed(dc, service))
 					.setDeployedDate(new DeploymentConfigParser(dc).getDeployedDate())
 					.setName(appName(dc))
 					.setVersion(new DeploymentConfigParser(dc).getVersion())
@@ -62,17 +63,21 @@ public class AppFactory {
 		return new ImageStreamParser(cicdImage).getTagBySha(sha);
 	}
 
-	private boolean isDeployed(IService service) {
+	private boolean isDeployed(IDeploymentConfig dc, IService service) {
 		try {
-			new RestTemplate().getForObject(createURL(service), API.class).getVersion();
+			new RestTemplate().getForObject(createURL(dc, service), API.class).getVersion();
 			return true;
 		} catch (RestClientException e) {
 			return false;
 		}
 	}
 
-	private String createURL(IService service) {
-		return "http://" + service.getName() + "." + service.getNamespaceName() + ".svc" + ":8080/api";
+	private String createURL(IDeploymentConfig dc, IService service) {
+		DeploymentConfigParser deploymentConfigParser = new DeploymentConfigParser(dc);
+		String path = deploymentConfigParser.getReadinessPath();
+		String port = deploymentConfigParser.getReadinessPort();
+		String address = new ServiceParser(service).clusterIP();
+		return "http://" + address + ":" + port + path;
 	}
 
 }

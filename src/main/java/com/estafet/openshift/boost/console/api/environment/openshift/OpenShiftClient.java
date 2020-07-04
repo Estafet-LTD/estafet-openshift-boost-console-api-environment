@@ -375,12 +375,19 @@ public class OpenShiftClient {
 			String gitRepository = new BuildConfigParser(testPipeline).getGitRepository();
 			parameters.put("REPO",  repoUri(gitRepository));
 			span.setBaggageItem("env", env);
-			executePipeline(testPipeline, parameters);
+			executePipeline(getTestWrapperBuildConfig(env), parameters);
 		} catch (RuntimeException e) {
 			throw handleException(span, e);
 		} finally {
 			span.finish();
 		}
+	}
+
+	@Cacheable(cacheNames = { "test" })
+	public IBuildConfig getTestWrapperBuildConfig(String env) {
+		String pipeline = env.equals("blue") || env.equals("green") ? "qa-prod" : "qa-" + env;
+		IBuildConfig testPipeline = (IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, pipeline, ENV.CICD);
+		return testPipeline;
 	}
 
 	@Cacheable(cacheNames = { "test" })
