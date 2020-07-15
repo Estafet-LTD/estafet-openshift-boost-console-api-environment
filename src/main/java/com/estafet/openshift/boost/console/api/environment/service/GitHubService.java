@@ -7,7 +7,7 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.estafet.openshift.boost.commons.lib.env.ENV;
+import com.estafet.openshift.boost.commons.lib.git.Git;
 import com.estafet.openshift.boost.console.api.environment.dao.EnvDAO;
 import com.estafet.openshift.boost.console.api.environment.model.Env;
 import com.estafet.openshift.boost.console.api.environment.model.Microservice;
@@ -57,7 +57,8 @@ public class GitHubService {
 	}
 	
 	private String getNewApp(GitHubHook hook) {
-		String url = "https://raw.githubusercontent.com/" + ENV.GITHUB + "/" + System.getenv("PRODUCT_REPO") + "/master/setup-environments/vars/microservices-vars.yml";
+		Git git = new Git(System.getenv("PRODUCT_REPO"));
+		String url = "https://raw.githubusercontent.com/" + git.uri() + "/" + git.org() + "/master/setup-environments/vars/microservices-vars.yml";
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(new URL(url).openStream());

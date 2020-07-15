@@ -5,8 +5,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,6 @@ import io.opentracing.tag.Tags;
 public class OpenShiftClient {
 
 	private static final Logger log = LoggerFactory.getLogger(OpenShiftClient.class);
-	private static Pattern pattern = Pattern.compile("(https:\\/\\/.+\\/)(.+)\\/(.+)");
 	
 	@Autowired
 	private Tracer tracer;
@@ -229,8 +226,7 @@ public class OpenShiftClient {
 	
 	private Map<String, String> getAppParameters(String app, String repoUrl) {
 		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put("GITHUB", ENV.GITHUB);
-		parameters.put("REPO", repoUri(repoUrl));
+		parameters.put("REPO", repoUrl);
 		parameters.put("PRODUCT", ENV.PRODUCT);
 		parameters.put("MICROSERVICE", app);
 		parameters.put("PRODUCT_REPO", System.getenv("PRODUCT_REPO"));
@@ -253,19 +249,11 @@ public class OpenShiftClient {
 
 	private Map<String, String> getAppParameters(String app) {
 		Map<String, String> parameters = new HashMap<String, String>();
-		String repoUrl = repoUrl(app);
-		parameters.put("GITHUB", ENV.GITHUB);
-		parameters.put("REPO", repoUri(repoUrl));
+		parameters.put("REPO", repoUrl(app));
 		parameters.put("PRODUCT", ENV.PRODUCT);
 		parameters.put("MICROSERVICE", app);
 		parameters.put("PRODUCT_REPO", System.getenv("PRODUCT_REPO"));
 		return parameters;
-	}
-	
-	private String repoUri(String repoUrl) {
-		Matcher matcher = pattern.matcher(repoUrl);
-		matcher.find();
-		return matcher.group(3);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -273,7 +261,6 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeBuildAllPipeline").start();
 		try {
 			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("GITHUB", ENV.GITHUB);
 			parameters.put("REPO", System.getenv("PRODUCT_REPO"));
 			parameters.put("PRODUCT", ENV.PRODUCT);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "build-all", ENV.CICD), parameters);
@@ -303,7 +290,6 @@ public class OpenShiftClient {
 		Span span = tracer.buildSpan("executeReleaseAllPipeline").start();
 		try {
 			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("GITHUB", ENV.GITHUB);
 			parameters.put("REPO", System.getenv("PRODUCT_REPO"));
 			parameters.put("PRODUCT", ENV.PRODUCT);
 			executePipeline((IBuildConfig) getClient().get(ResourceKind.BUILD_CONFIG, "release-all", ENV.CICD), parameters);
@@ -359,7 +345,6 @@ public class OpenShiftClient {
 
 	private Map<String, String> getEnvParameters(String env) {
 		Map<String, String> parameters = new HashMap<String, String>();
-		parameters.put("GITHUB", ENV.GITHUB);
 		parameters.put("REPO", System.getenv("PRODUCT_REPO"));
 		parameters.put("PRODUCT", ENV.PRODUCT);
 		parameters.put("PROJECT", ENV.namespace(env));
@@ -373,7 +358,7 @@ public class OpenShiftClient {
 			IBuildConfig testPipeline = getTestBuildConfig(env);
 			Map<String, String> parameters = getEnvParameters(env);
 			String gitRepository = new BuildConfigParser(testPipeline).getGitRepository();
-			parameters.put("REPO",  repoUri(gitRepository));
+			parameters.put("REPO",  gitRepository);
 			span.setBaggageItem("env", env);
 			executePipeline(getTestWrapperBuildConfig(env), parameters);
 		} catch (RuntimeException e) {

@@ -98,11 +98,6 @@ objects:
                   configMapKeyRef:
                     name: ${MICROSERVICE} 
                     key: PRODUCT_REPO                
-              - name: GITHUB
-                valueFrom:
-                  configMapKeyRef:
-                    name: ${MICROSERVICE} 
-                    key: GITHUB
               - name: JAEGER_SERVICE_NAME
                 valueFrom:
                   configMapKeyRef:
