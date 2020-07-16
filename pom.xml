@@ -1,9 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.estafet.boostcd</groupId>
-	<artifactId>boostcd-environment-api</artifactId>
+	<artifactId>environment-api</artifactId>
 	<version>0.1.10-SNAPSHOT</version>
-	<name>boostcd-environment-api</name>
+	<name>environment-api</name>
 
 	<parent>
 		<groupId>com.estafet.boostcd</groupId>
@@ -13,7 +12,7 @@
 
 	<properties>
 		<microservice>console-environment-api</microservice>
-		<entity.package>com.estafet.openshift.boost.console.api.environment.model</entity.package>
+		<entity.package>com.estafet.boostcd.console.environment.api.model</entity.package>
 	</properties>
 
 	<dependencies>
@@ -51,9 +50,9 @@
 		    <artifactId>json-simple</artifactId>
 		</dependency>				
 		<dependency>
-			<groupId>com.estafet.openshift.boost</groupId>
-			<artifactId>estafet-openshift-boost-messages-lib</artifactId>
-			<version>0.0.32</version>
+			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>boostcd-messages-lib</artifactId>
+			<version>0.0.33-SNAPSHOT</version>
 		</dependency>		
         <dependency>
             <groupId>org.springframework.boot</groupId>
