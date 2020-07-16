@@ -11,7 +11,7 @@
 	</parent>
 
 	<properties>
-		<microservice>console-environment-api</microservice>
+		<microservice>environment-api</microservice>
 		<entity.package>com.estafet.boostcd.console.environment.api.model</entity.package>
 	</properties>
 
@@ -38,9 +38,22 @@
 		</dependency>
 		<dependency>
 			<groupId>com.estafet.boostcd</groupId>
-			<artifactId>boostcd-commons-lib</artifactId>
+			<artifactId>commons-lib</artifactId>
 			<version>0.0.16-SNAPSHOT</version>
-		</dependency>
+		</dependency>	
+		<dependency>
+			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>messages-lib</artifactId>
+			<version>0.0.33-SNAPSHOT</version>
+		</dependency>				
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-activemq</artifactId>
+		</dependency>		
 		<dependency>
 		    <groupId>com.fasterxml.jackson.dataformat</groupId>
 		    <artifactId>jackson-dataformat-yaml</artifactId>
@@ -48,12 +61,7 @@
 		<dependency>
 		    <groupId>com.googlecode.json-simple</groupId>
 		    <artifactId>json-simple</artifactId>
-		</dependency>				
-		<dependency>
-			<groupId>com.estafet.boostcd</groupId>
-			<artifactId>boostcd-messages-lib</artifactId>
-			<version>0.0.33-SNAPSHOT</version>
-		</dependency>		
+		</dependency>					
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>

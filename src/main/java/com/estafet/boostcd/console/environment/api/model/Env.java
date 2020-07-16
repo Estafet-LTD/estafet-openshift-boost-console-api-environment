@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.estafet.openshift.boost.commons.lib.date.DateUtils;
+import com.estafet.boostcd.commons.date.DateUtils;
 import com.estafet.openshift.boost.messages.environments.Environment;
 import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 

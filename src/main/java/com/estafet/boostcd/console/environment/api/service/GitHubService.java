@@ -4,20 +4,20 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.estafet.boostcd.commons.git.Git;
 import com.estafet.boostcd.console.environment.api.dao.EnvDAO;
 import com.estafet.boostcd.console.environment.api.model.Env;
 import com.estafet.boostcd.console.environment.api.model.Microservice;
 import com.estafet.boostcd.console.environment.api.model.Microservices;
 import com.estafet.boostcd.console.environment.api.openshift.BuildConfigParser;
 import com.estafet.boostcd.console.environment.api.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.commons.lib.git.Git;
 import com.estafet.openshift.boost.messages.github.GitHubHook;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.openshift.restclient.model.IBuildConfig;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class GitHubService {

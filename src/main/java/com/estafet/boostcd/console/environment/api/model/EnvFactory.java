@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.estafet.boostcd.commons.env.ENV;
 import com.estafet.boostcd.console.environment.api.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.commons.lib.env.ENV;
 import com.openshift.restclient.model.IDeploymentConfig;
 import com.openshift.restclient.model.IImageStream;
 import com.openshift.restclient.model.IProject;

@@ -1,9 +1,9 @@
 package com.estafet.boostcd.console.environment.api.model;
 
+import com.estafet.boostcd.commons.model.API;
 import com.estafet.boostcd.console.environment.api.openshift.DeploymentConfigParser;
 import com.estafet.boostcd.console.environment.api.openshift.ImageStreamParser;
 import com.estafet.boostcd.console.environment.api.openshift.ServiceParser;
-import com.estafet.openshift.boost.commons.lib.model.API;
 import com.openshift.restclient.model.IDeploymentConfig;
 import com.openshift.restclient.model.IImageStream;
 import com.openshift.restclient.model.IService;
