@@ -16,7 +16,7 @@
 	<bean id="myEmf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="packagesToScan" value="com.estafet.openshift.boost.console.api.environment.model" />
+		<property name="packagesToScan" value="com.estafet.boostcd.console.environment.api.model" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
 		</property>
@@ -26,8 +26,8 @@
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
 				<prop key="javax.persistence.schema-generation.database.action">none</prop>
 				<prop key="javax.persistence.schema-generation.scripts.action">drop-and-create</prop>
-				<prop key="javax.persistence.schema-generation.scripts.create-target">ddl/create-console-environment-api-db.ddl</prop>
-				<prop key="javax.persistence.schema-generation.scripts.drop-target">ddl/drop-console-environment-api-db.ddl</prop>
+				<prop key="javax.persistence.schema-generation.scripts.create-target">src/main/resources/ddl/create-console-environment-api-db.ddl</prop>
+				<prop key="javax.persistence.schema-generation.scripts.drop-target">src/main/resources/ddl/drop-console-environment-api-db.ddl</prop>
 			</props>
 		</property>
 	</bean>
