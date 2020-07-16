@@ -12,7 +12,7 @@
 
 	<properties>
 		<microservice>environment-api</microservice>
-		<entity.package>com.estafet.boostcd.console.environment.api.model</entity.package>
+		<entity.package>com.estafet.boostcd.environment.api.model</entity.package>
 	</properties>
 
 	<dependencies>
