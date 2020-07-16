@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.estafet.openshift.boost.console</groupId>
-	<artifactId>estafet-openshift-boost-console-api-environment</artifactId>
+	<groupId>com.estafet.boostcd</groupId>
+	<artifactId>boostcd-environment-api</artifactId>
 	<version>0.1.10-SNAPSHOT</version>
-	<name>estafet-openshift-boost-console-api-environment</name>
+	<name>boostcd-environment-api</name>
 
 	<parent>
-		<groupId>com.estafet.openshift.boost</groupId>
-		<artifactId>estafet-openshift-boost-springboot-db</artifactId>
-		<version>1.1.6</version>
+		<groupId>com.estafet.boostcd</groupId>
+		<artifactId>boostcd-springboot-jpa</artifactId>
+		<version>1.1.7-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -36,6 +36,11 @@
 					<artifactId>log4j</artifactId>
 				</exclusion>
 			</exclusions>			
+		</dependency>
+		<dependency>
+			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>boostcd-commons-lib</artifactId>
+			<version>0.0.16-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.dataformat</groupId>
