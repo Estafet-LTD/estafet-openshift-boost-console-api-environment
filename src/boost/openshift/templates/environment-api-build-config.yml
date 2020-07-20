@@ -2,30 +2,26 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: console-environment-api-build-config
+  name: environment-api-build-config
 parameters:
 - description: Defines the namespace within which these objects are deployed
   name: NAMESPACE
   required: true
 - description: Defines the namespace for the image stream for builder image
   name: IMAGESTREAM_NAMESPACE
-  value: openshift
   required: true       
 - description: Defines name of the microservice
   name: MICROSERVICE
-  value: console-environment-api
   required: true
 - description: Defines the git repository uri within which the microservice resides
   name: MICROSERVICE_REPO_URI
-  value: estafet-openshift-boost-console-api-environment
   required: true
 - description: Git branch/tag reference
   name: SOURCE_REPOSITORY_REF
   value: master
-  required: false
+  required: true
 - description: Defines docker registry
   name: DOCKER_REGISTRY
-  value: docker-registry.default.svc:5000
   required: true    
 - description: Defines docker image label
   name: DOCKER_IMAGE_LABEL
@@ -35,7 +31,6 @@ parameters:
   required: true     
 - description: Maven mirror url
   name: MAVEN_MIRROR_URL
-  value: http://nexus.nexus.svc:8081/nexus/content/groups/public
   required: true       
 objects:
 - apiVersion: v1

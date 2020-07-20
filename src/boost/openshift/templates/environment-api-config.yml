@@ -2,14 +2,13 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: console-environment-api-config
+  name: environment-api-config
 parameters:
 - description: Defines the namespace within which these objects are deployed
   name: NAMESPACE
   required: true
 - description: Defines name of the microservice
   name: MICROSERVICE
-  value: console-environment-api
   required: true
 - description: Defines max memory
   name: MAX_MEMORY
@@ -55,14 +54,6 @@ objects:
       app: ${MICROSERVICE}
       deploymentconfig: ${MICROSERVICE}
     strategy:
-      activeDeadlineSeconds: 21600
-      resources: {}
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
       type: Rolling
     template:
       metadata:
