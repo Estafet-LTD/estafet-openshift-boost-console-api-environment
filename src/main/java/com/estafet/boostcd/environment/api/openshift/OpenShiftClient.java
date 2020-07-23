@@ -358,6 +358,7 @@ public class OpenShiftClient {
 			IBuildConfig testPipeline = getTestBuildConfig(env);
 			Map<String, String> parameters = getEnvParameters(env);
 			String gitRepository = new BuildConfigParser(testPipeline).getGitRepository();
+			parameters.put("ENV", env);
 			parameters.put("REPO",  gitRepository);
 			span.setBaggageItem("env", env);
 			executePipeline(getTestWrapperBuildConfig(env), parameters);
