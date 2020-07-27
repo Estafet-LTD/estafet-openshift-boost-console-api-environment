@@ -7,7 +7,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -15,6 +18,7 @@ import javax.persistence.Table;
 import com.estafet.boostcd.commons.date.DateUtils;
 import com.estafet.openshift.boost.messages.environments.Environment;
 import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "Env")
@@ -42,6 +46,11 @@ public class Env {
 	@OneToMany(mappedBy = "env", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@OrderBy("name ASC")
 	private List<App> apps = new ArrayList<App>();
+
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "PRODUCT_ID", nullable = false, referencedColumnName = "PRODUCT_ID", foreignKey = @ForeignKey(name = "ENV_TO_PRODUCT_FK"))
+	private Product product;
 	
 	public String getName() {
 		return name;
@@ -97,6 +106,10 @@ public class Env {
 
 	public void setApps(List<App> apps) {
 		this.apps = apps;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Env merge(Env other) {

@@ -63,12 +63,7 @@ objects:
           deploymentconfig: ${MICROSERVICE}
       spec:
         containers:
-          - env:
-              - name: PRODUCT
-                valueFrom:
-                  configMapKeyRef:
-                    name: ${MICROSERVICE} 
-                    key: PRODUCT                
+          - env:              
               - name: OPENSHIFT_HOST_PORT 
                 valueFrom:
                   configMapKeyRef:
