@@ -1,6 +1,5 @@
 package com.estafet.boostcd.environment.api.model;
 
-import com.estafet.boostcd.commons.model.API;
 import com.estafet.boostcd.environment.api.openshift.DeploymentConfigParser;
 import com.estafet.boostcd.environment.api.openshift.ImageStreamParser;
 import com.estafet.boostcd.environment.api.openshift.ServiceParser;
@@ -65,7 +64,7 @@ public class AppFactory {
 
 	private boolean isDeployed(IDeploymentConfig dc, IService service) {
 		try {
-			new RestTemplate().getForObject(createURL(dc, service), API.class).getVersion();
+			new RestTemplate().getForEntity(createURL(dc, service), String.class);
 			return true;
 		} catch (RestClientException e) {
 			return false;
