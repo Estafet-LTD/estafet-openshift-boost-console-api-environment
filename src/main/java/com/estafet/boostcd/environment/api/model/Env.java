@@ -8,11 +8,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.estafet.boostcd.commons.date.DateUtils;
@@ -25,7 +28,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Env {
 
 	@Id
-	@Column(name = "ENV_ID", nullable = false)
+	@SequenceGenerator(name = "ENV_ID_SEQ", sequenceName = "ENV_ID_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENV_ID_SEQ")
+	@Column(name = "ENV_ID")
+	private Long id;
+	
+	@Column(name = "ENV_NAME", nullable = false)
 	private String name;
 	
 	@Column(name = "DISPLAY_NAME", nullable = false)
@@ -110,6 +118,10 @@ public class Env {
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public Product getProduct() {
+		return product;
 	}
 
 	public Env merge(Env other) {

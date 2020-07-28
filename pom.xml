@@ -38,6 +38,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>ddl-lib</artifactId>
+			<version>0.0.16-SNAPSHOT</version>
+			<scope>runtime</scope>
+		</dependency>	
+		<dependency>
+			<groupId>com.estafet.boostcd</groupId>
 			<artifactId>commons-lib</artifactId>
 			<version>0.0.17-SNAPSHOT</version>
 		</dependency>	

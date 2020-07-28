@@ -21,11 +21,9 @@ public class Product {
 	@Column(name = "PRODUCT_ID", nullable = false)
     private String productId;
 
-    @Id
 	@Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
-    @Id
 	@Column(name = "VERSION", nullable = false)
     private String version;
     
