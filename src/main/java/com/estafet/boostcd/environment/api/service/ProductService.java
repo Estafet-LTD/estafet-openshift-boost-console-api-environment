@@ -37,8 +37,13 @@ public class ProductService {
 	@Autowired
 	private ProductDAO productDAO;
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<Product> getProducts() {
+		return productDAO.getProducts();
+	}
+	
+	@Transactional
+	public List<Product> update() {
 		List<Product> products = new ArrayList<Product>();
 		for (Product product : productDAO.getProducts()) {
 			products.add(product.addEnvs(getEnvs(product)));
@@ -134,6 +139,16 @@ public class ProductService {
 
 	private boolean isLive(Product product, String name) {
 		return client.getRoute(product.getProductId()).getServiceName().startsWith(name);
+	}
+
+	public Product update(Product product) {
+		Product saved = productDAO.getProduct(product.getProductId());
+		if (saved != null) {
+			productDAO.update(saved.merge(product));
+		} else {
+			productDAO.create(product);
+		}
+		return product;
 	}
 
 }

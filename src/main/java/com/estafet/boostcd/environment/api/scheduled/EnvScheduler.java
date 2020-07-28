@@ -24,7 +24,7 @@ public class EnvScheduler {
 	@Scheduled(fixedRate = 30000)
 	public void execute() {
 		log.info("refreshing environment data");
-		for (Product product : productService.getProducts()) {
+		for (Product product : productService.update()) {
 			environmentsProducer.sendMessage(product.getEnvironments());
 		}
 		log.info("environment data refreshed");
