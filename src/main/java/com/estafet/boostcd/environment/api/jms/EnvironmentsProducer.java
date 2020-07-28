@@ -6,20 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import com.estafet.openshift.boost.messages.environments.Environment;
+import com.estafet.openshift.boost.messages.environments.Environments;
 
 @Component
-public class EnvProducer {
+public class EnvironmentsProducer {
 
-	private static final Logger log = LoggerFactory.getLogger(EnvProducer.class);
+	private static final Logger log = LoggerFactory.getLogger(EnvironmentsProducer.class);
 	
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    public void sendMessage(Environment env) {
-    	log.debug(env.toJSON());
+    public void sendMessage(Environments environments) {
+    	log.debug(environments.toJSON());
         jmsTemplate.setPubSubDomain(true);
-        jmsTemplate.convertAndSend("env.topic", env.toJSON());
+        jmsTemplate.convertAndSend("environments.topic", environments.toJSON());
     }
 
 }

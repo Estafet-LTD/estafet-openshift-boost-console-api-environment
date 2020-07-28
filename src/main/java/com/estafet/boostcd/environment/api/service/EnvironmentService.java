@@ -1,11 +1,6 @@
 package com.estafet.boostcd.environment.api.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.estafet.boostcd.environment.api.dao.EnvDAO;
-import com.estafet.boostcd.environment.api.model.Env;
-import com.estafet.boostcd.environment.api.model.EnvFactory;
 import com.estafet.boostcd.environment.api.openshift.OpenShiftClient;
 import com.estafet.openshift.boost.messages.environments.Environment;
 
@@ -13,55 +8,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EnvironmentService {
 
-	private static final Logger log = LoggerFactory.getLogger(EnvironmentService.class);
+	static final Logger log = LoggerFactory.getLogger(EnvironmentService.class);
 	
 	@Autowired
 	private OpenShiftClient client;
 	
-	@Autowired
-	private EnvDAO envDAO;
+	@Autowired EnvDAO envDAO;
 	
-	@Autowired
-	private EnvFactory envFactory;
-	
-	public Environment doAction(String env, String action) {
+	public Environment doAction(String productId, String env, String action) {
 		if (env.equals("build")) {
 			if (action.equals("build")) {
-				client.executeBuildAllPipeline();
+				client.executeBuildAllPipeline(productId);
 			} else if (action.equals("promote")) {
-				client.executeReleaseAllPipeline();
+				client.executeReleaseAllPipeline(productId);
 			}
 		} else {
 			if (action.equals("promote")) {
-				client.executePromoteAllPipeline(env);
+				client.executePromoteAllPipeline(productId, env);
 			} else if (action.equals("test")) {
-				client.executeTestPipeline(env);
+				client.executeTestPipeline(productId, env);
 			} else if (action.equals("go-live") || action.equals("back-out")) {
-				client.executePromoteToLivePipeline();
+				client.executePromoteToLivePipeline(productId);
 			}
 		}
-		return envDAO.getEnv(env).getEnvironment();
-	}
-	
-	@Transactional
-	public List<Env> updateEnvs() {
-		List<Env> result = new ArrayList<Env>();
-		for (Env env : envFactory.getEnvs()) {
-			log.debug("scanned - " + env.toString());
-			Env savedEnv = envDAO.getEnv(env.getName());
-			if (savedEnv == null) {
-				savedEnv = envDAO.createEnv(env);
-			} else if (savedEnv.changed(env)) {
-				savedEnv = envDAO.updateEnv(savedEnv.merge(env));
-			}
-			result.add(savedEnv);
-		}
-		return result;
+		return envDAO.getEnv(productId, env).getEnvironment();
 	}
 
 }

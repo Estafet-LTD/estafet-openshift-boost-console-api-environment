@@ -23,22 +23,22 @@ public class MicroserviceService {
 	private EnvDAO envDAO;
 
 	@Transactional(readOnly = true)
-	public List<Environment> getMicroserviceEnvironments() {
-		return getMicroserviceEnvironments("build");
+	public List<Environment> getMicroserviceEnvironments(String productId) {
+		return getMicroserviceEnvironments(productId, "build");
 	}
 	
-	public List<Environment> getMicroserviceEnvironments(String envId) {
-		return getMicroserviceEnvironments(envId, new ArrayList<Environment>());
+	public List<Environment> getMicroserviceEnvironments(String productId, String envId) {
+		return getMicroserviceEnvironments(productId, envId, new ArrayList<Environment>());
 	}
 	
-	private List<Environment> getMicroserviceEnvironments(String envId, List<Environment> envs) {
-		Env env = envDAO.getEnv(envId);
+	private List<Environment> getMicroserviceEnvironments(String productId, String envId, List<Environment> envs) {
+		Env env = envDAO.getEnv(productId, envId);
 		envs.add(env.getEnvironment());
 		if (!env.getNext().equals("prod")) {
-			return getMicroserviceEnvironments(env.getNext(), envs);
+			return getMicroserviceEnvironments(productId, env.getNext(), envs);
 		} else {
-			Env green = envDAO.getEnv("green");
-			Env blue = envDAO.getEnv("blue");
+			Env green = envDAO.getEnv(productId, "green");
+			Env blue = envDAO.getEnv(productId, "blue");
 			if (green.getLive()) {
 				envs.add(blue.getEnvironment());
 				envs.add(green.getEnvironment());
@@ -50,9 +50,9 @@ public class MicroserviceService {
 		}
 	}
 	
-	public Environment getMicroservice(String envId, String appId) {
+	public Environment getMicroservice(String productId, String envId, String appId) {
 	Environment environment = new Environment();
-	Env env = envDAO.getEnv(envId);	
+	Env env = envDAO.getEnv(productId, envId);	
 	List<App> envApps = env.getApps();
 	for(App app : envApps) {
 		if (app.getName().equals(appId)) {
@@ -66,19 +66,19 @@ public class MicroserviceService {
 	return environment;
 }
 
-	public Environment doAction(String env, String app, String action) {
+	public Environment doAction(String productId, String env, String app, String action) {
 		if (env.equals("build")) {
 			if (action.equals("build")) {
-				client.executeBuildPipeline(app);
+				client.executeBuildPipeline(productId, app);
 			} else if (action.equals("promote")) {
-				client.executeReleasePipeline(app);
+				client.executeReleasePipeline(productId, app);
 			}
 		} else {
 			if (action.equals("promote")) {
-				client.executePromotePipeline(env, app);
+				client.executePromotePipeline(productId, env, app);
 			} 
 		}
-		return envDAO.getEnv(env).getEnvironment();
+		return envDAO.getEnv(productId, env).getEnvironment();
 	}
 	
 }

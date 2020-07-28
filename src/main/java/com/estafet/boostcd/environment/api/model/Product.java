@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.estafet.openshift.boost.messages.environments.Environments;
+
 @Entity
 @Table(name = "Product")
 public class Product {
@@ -26,6 +28,9 @@ public class Product {
     @Id
 	@Column(name = "VERSION", nullable = false)
     private String version;
+    
+    @Column(name = "UPDATED_DATE", nullable = false)
+	private String updatedDate;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Env> envs = new ArrayList<Env>();
@@ -54,7 +59,11 @@ public class Product {
         this.version = version;
     }
 
-    public List<Env> getEnvs() {
+    public void setUpdatedDate(String updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public List<Env> getEnvs() {
         return envs;
     }
 
@@ -63,6 +72,24 @@ public class Product {
 		envs.add(env);
 		return this;
     }
+	
+	public Product addEnvs(List<Env> envs) {
+		for (Env env : envs) {
+			addEnv(env);
+		}
+		return this;
+	}
+	
+	public Environments getEnvironments() {
+		Environments environments = Environments.builder()
+				.setProductId(productId)
+				.setUpdatedDate(updatedDate)
+				.build();
+		for (Env env : envs) {
+			environments.addEnvironment(env.getEnvironment());
+		}
+		return environments;
+	}
 
     public static ProductBuilder builder() {
         return new ProductBuilder();
@@ -73,8 +100,14 @@ public class Product {
         private String productId;
         private String description;
         private String version;
+        private String updatedDate;
 
-        public ProductBuilder setProductId(String productId) {
+        public ProductBuilder setUpdatedDate(String updatedDate) {
+			this.updatedDate = updatedDate;
+			return this;
+		}
+
+		public ProductBuilder setProductId(String productId) {
             this.productId = productId;
             return this;
         }
@@ -94,6 +127,7 @@ public class Product {
             product.setDescription(description);
             product.setProductId(productId);
             product.setVersion(version);
+            product.setUpdatedDate(updatedDate);
             return product;
         }
         
