@@ -1,17 +1,17 @@
 package com.estafet.boostcd.environment.api.model;
 
-import com.estafet.boostcd.environment.api.openshift.DeploymentConfigParser;
-import com.estafet.boostcd.environment.api.openshift.ImageStreamParser;
-import com.estafet.boostcd.environment.api.openshift.ServiceParser;
-import com.openshift.restclient.model.IDeploymentConfig;
-import com.openshift.restclient.model.IImageStream;
-import com.openshift.restclient.model.IService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import com.estafet.boostcd.openshift.DeploymentConfigParser;
+import com.estafet.boostcd.openshift.ImageStreamParser;
+import com.estafet.boostcd.openshift.ServiceParser;
+import com.openshift.restclient.model.IDeploymentConfig;
+import com.openshift.restclient.model.IImageStream;
+import com.openshift.restclient.model.IService;
 
 @Component
 public class AppFactory {

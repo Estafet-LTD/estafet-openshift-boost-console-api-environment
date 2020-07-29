@@ -1,13 +1,13 @@
 package com.estafet.boostcd.environment.api.service;
 
-import com.estafet.boostcd.environment.api.dao.EnvDAO;
-import com.estafet.boostcd.environment.api.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.messages.environments.Environment;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.estafet.boostcd.environment.api.dao.EnvDAO;
+import com.estafet.boostcd.openshift.OpenShiftClient;
+import com.estafet.openshift.boost.messages.environments.Environment;
 
 @Service
 public class EnvironmentService {
@@ -28,7 +28,7 @@ public class EnvironmentService {
 			}
 		} else {
 			if (action.equals("promote")) {
-				client.executePromoteAllPipeline(productId, env);
+				client.executePromoteAllPipeline(productId, env, envDAO.getEnv(productId, env).getNext());
 			} else if (action.equals("test")) {
 				client.executeTestPipeline(productId, env);
 			} else if (action.equals("go-live") || action.equals("back-out")) {

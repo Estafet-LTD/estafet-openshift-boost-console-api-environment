@@ -22,20 +22,10 @@
     		<version>4.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.openshift</groupId>
-			<artifactId>openshift-restclient-java</artifactId>
-			<version>9.0.0.Final</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>			
-		</dependency>
+			<groupId>com.estafet.boostcd</groupId>
+			<artifactId>openshift-lib</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>	
 		<dependency>
 			<groupId>com.estafet.boostcd</groupId>
 			<artifactId>ddl-lib</artifactId>

@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.estafet.boostcd.commons.env.ENV;
 import com.estafet.boostcd.environment.api.dao.ProductDAO;
 import com.estafet.boostcd.environment.api.model.App;
 import com.estafet.boostcd.environment.api.model.AppFactory;
 import com.estafet.boostcd.environment.api.model.Env;
 import com.estafet.boostcd.environment.api.model.Product;
-import com.estafet.boostcd.environment.api.openshift.OpenShiftClient;
+import com.estafet.boostcd.openshift.OpenShiftClient;
 import com.openshift.restclient.model.IDeploymentConfig;
 import com.openshift.restclient.model.IImageStream;
 import com.openshift.restclient.model.IProject;
 import com.openshift.restclient.model.IService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductService {

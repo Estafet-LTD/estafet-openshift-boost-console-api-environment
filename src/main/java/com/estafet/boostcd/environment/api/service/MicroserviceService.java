@@ -3,15 +3,15 @@ package com.estafet.boostcd.environment.api.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.estafet.boostcd.environment.api.dao.EnvDAO;
-import com.estafet.boostcd.environment.api.model.App;
-import com.estafet.boostcd.environment.api.model.Env;
-import com.estafet.boostcd.environment.api.openshift.OpenShiftClient;
-import com.estafet.openshift.boost.messages.environments.Environment;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.estafet.boostcd.environment.api.dao.EnvDAO;
+import com.estafet.boostcd.environment.api.model.App;
+import com.estafet.boostcd.environment.api.model.Env;
+import com.estafet.boostcd.openshift.OpenShiftClient;
+import com.estafet.openshift.boost.messages.environments.Environment;
 
 @Service
 public class MicroserviceService {
@@ -75,7 +75,7 @@ public class MicroserviceService {
 			}
 		} else {
 			if (action.equals("promote")) {
-				client.executePromotePipeline(productId, env, app);
+				client.executePromotePipeline(productId, env, app, envDAO.getEnv(productId, env).getNext());
 			} 
 		}
 		return envDAO.getEnv(productId, env).getEnvironment();
