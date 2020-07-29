@@ -27,7 +27,7 @@ public class Product {
 	@Column(name = "VERSION", nullable = false)
     private String version;
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Env> envs = new ArrayList<Env>();
 
     public String getProductId() {
