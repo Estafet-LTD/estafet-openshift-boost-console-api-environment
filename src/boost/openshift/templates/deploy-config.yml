@@ -74,12 +74,7 @@ objects:
                 valueFrom:
                   secretKeyRef:
                     name: ${MICROSERVICE} 
-                    key: OPENSHIFT_PASSWORD                
-              - name: PRODUCT_REPO
-                valueFrom:
-                  configMapKeyRef:
-                    name: ${MICROSERVICE} 
-                    key: PRODUCT_REPO                
+                    key: OPENSHIFT_PASSWORD                               
               - name: JAEGER_SERVICE_NAME
                 valueFrom:
                   configMapKeyRef:
