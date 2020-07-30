@@ -40,7 +40,7 @@ public class GitHubService {
 			for (Product product : productDAO.getProducts()) {
 				for (IBuildConfig buildConfig : client.getBuildConfigs(product.getProductId())) {
 					if (compareURL(hook, buildConfig)) {
-						client.executeBuildPipeline(product.getProductId(), buildConfig.getName());
+						client.executeBuildPipeline(product.getProductId(), product.getRepo(), buildConfig.getName());
 						return "build_success";
 					}
 				}	
@@ -50,7 +50,7 @@ public class GitHubService {
 					for (Product product : productDAO.getProducts()) {
 						IBuildConfig buildConfig = client.getTestBuildConfig(product.getProductId(), env.getName());
 						if (compareURL(hook, buildConfig)) {
-							client.executeTestPipeline(product.getProductId(), env.getName());
+							client.executeTestPipeline(product.getProductId(), product.getRepo(), env.getName());
 							return "test_success";
 						}
 					}
@@ -59,7 +59,7 @@ public class GitHubService {
 			String app = getNewApp(hook);
 			if (app != null) {
 				for (Product product : productDAO.getProducts()) {
-					client.executeBuildPipeline(product.getProductId(), app, hook.getRepository().getHtmlUrl());
+					client.executeBuildPipeline(product.getProductId(), product.getRepo(), app, hook.getRepository().getHtmlUrl());
 					return "build_success";
 				}
 

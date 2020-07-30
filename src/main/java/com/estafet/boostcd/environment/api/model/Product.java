@@ -26,6 +26,9 @@ public class Product {
 
 	@Column(name = "VERSION", nullable = false)
     private String version;
+	
+	@Column(name = "REPO", nullable = false)
+    private String repo;
     
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Env> envs = new ArrayList<Env>();
@@ -53,6 +56,14 @@ public class Product {
     public void setVersion(String version) {
         this.version = version;
     }
+
+	public String getRepo() {
+		return repo;
+	}
+
+	public void setRepo(String repo) {
+		this.repo = repo;
+	}
 
 	public List<Env> getEnvs() {
         return envs;
@@ -96,6 +107,12 @@ public class Product {
         private String productId;
         private String description;
         private String version;
+        private String repo;
+
+		public ProductBuilder setRepo(String repo) {
+			this.repo = repo;
+			return this;
+		}
 
 		public ProductBuilder setProductId(String productId) {
             this.productId = productId;
@@ -117,6 +134,7 @@ public class Product {
             product.setDescription(description);
             product.setProductId(productId);
             product.setVersion(version);
+            product.setRepo(repo);
             return product;
         }
         

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.boostcd.environment.api.dao.EnvDAO;
+import com.estafet.boostcd.environment.api.dao.ProductDAO;
 import com.estafet.boostcd.environment.api.model.App;
 import com.estafet.boostcd.environment.api.model.Env;
 import com.estafet.boostcd.openshift.OpenShiftClient;
@@ -18,19 +19,22 @@ public class MicroserviceService {
 
 	@Autowired
 	private OpenShiftClient client;
-	
+
 	@Autowired
 	private EnvDAO envDAO;
+
+	@Autowired
+	private ProductDAO productDAO;
 
 	@Transactional(readOnly = true)
 	public List<Environment> getMicroserviceEnvironments(String productId) {
 		return getMicroserviceEnvironments(productId, "build");
 	}
-	
+
 	public List<Environment> getMicroserviceEnvironments(String productId, String envId) {
 		return getMicroserviceEnvironments(productId, envId, new ArrayList<Environment>());
 	}
-	
+
 	private List<Environment> getMicroserviceEnvironments(String productId, String envId, List<Environment> envs) {
 		Env env = envDAO.getEnv(productId, envId);
 		envs.add(env.getEnvironment());
@@ -49,36 +53,38 @@ public class MicroserviceService {
 			return envs;
 		}
 	}
-	
+
 	public Environment getMicroservice(String productId, String envId, String appId) {
-	Environment environment = new Environment();
-	Env env = envDAO.getEnv(productId, envId);	
-	List<App> envApps = env.getApps();
-	for(App app : envApps) {
-		if (app.getName().equals(appId)) {
-			envApps.clear();
-			envApps.add(app);
-			env.setApps(envApps);
-			environment = env.getEnvironment();
-			break;
+		Environment environment = new Environment();
+		Env env = envDAO.getEnv(productId, envId);
+		List<App> envApps = env.getApps();
+		for (App app : envApps) {
+			if (app.getName().equals(appId)) {
+				envApps.clear();
+				envApps.add(app);
+				env.setApps(envApps);
+				environment = env.getEnvironment();
+				break;
+			}
 		}
+		return environment;
 	}
-	return environment;
-}
 
 	public Environment doAction(String productId, String env, String app, String action) {
+		String productRepo = productDAO.getProduct(productId).getRepo();
 		if (env.equals("build")) {
 			if (action.equals("build")) {
-				client.executeBuildPipeline(productId, app);
+				client.executeBuildPipeline(productId, productRepo, app);
 			} else if (action.equals("promote")) {
-				client.executeReleasePipeline(productId, app);
+				client.executeReleasePipeline(productId, productRepo, app);
 			}
 		} else {
 			if (action.equals("promote")) {
-				client.executePromotePipeline(productId, env, app, envDAO.getEnv(productId, env).getNext());
-			} 
+				client.executePromotePipeline(productId, productRepo, env, app,
+						envDAO.getEnv(productId, env).getNext());
+			}
 		}
 		return envDAO.getEnv(productId, env).getEnvironment();
 	}
-	
+
 }

@@ -151,4 +151,9 @@ public class ProductService {
 		return product;
 	}
 
+	@Transactional(readOnly = true)
+	public Product getProduct(String product) {
+		return productDAO.getProduct(product);
+	}
+
 }
