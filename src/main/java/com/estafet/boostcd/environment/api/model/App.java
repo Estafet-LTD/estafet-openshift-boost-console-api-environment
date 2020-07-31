@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "APP", uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "ENV_ID", "APP_ID" }, name = "ENV_APP_KEY") })
+		@UniqueConstraint(columnNames = { "ENV_ID", "APP_NAME" }, name = "ENV_APP_KEY") })
 public class App {
 
 	@Id
