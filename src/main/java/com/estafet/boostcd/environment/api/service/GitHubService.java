@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.estafet.boostcd.commons.git.Git;
-import com.estafet.boostcd.environment.api.dao.EnvDAO;
 import com.estafet.boostcd.environment.api.dao.ProductDAO;
 import com.estafet.boostcd.environment.api.model.Env;
 import com.estafet.boostcd.environment.api.model.Microservice;
@@ -28,9 +27,6 @@ public class GitHubService {
 	private OpenShiftClient client;
 
 	@Autowired
-	private EnvDAO envDAO;
-	
-	@Autowired
 	private ProductDAO productDAO;
 
 	public String webhook(GitHubHook hook) {
@@ -43,11 +39,12 @@ public class GitHubService {
 						client.executeBuildPipeline(product.getProductId(), product.getRepo(), buildConfig.getName());
 						return "build_success";
 					}
-				}	
+				}
 			}
-			for (Env env : envDAO.getEnvs()) {
-				if (!env.getName().equals("build")) {
-					for (Product product : productDAO.getProducts()) {
+			for (Product product : productDAO.getProducts()) {
+				for (Env env : product.getEnvs()) {
+					if (!env.getName().equals("build")) {
+
 						IBuildConfig buildConfig = client.getTestBuildConfig(product.getProductId(), env.getName());
 						if (compareURL(hook, buildConfig)) {
 							client.executeTestPipeline(product.getProductId(), product.getRepo(), env.getName());
@@ -55,11 +52,13 @@ public class GitHubService {
 						}
 					}
 				}
+
 			}
 			String app = getNewApp(hook);
 			if (app != null) {
 				for (Product product : productDAO.getProducts()) {
-					client.executeBuildPipeline(product.getProductId(), product.getRepo(), app, hook.getRepository().getHtmlUrl());
+					client.executeBuildPipeline(product.getProductId(), product.getRepo(), app,
+							hook.getRepository().getHtmlUrl());
 					return "build_success";
 				}
 
@@ -67,10 +66,11 @@ public class GitHubService {
 			return "no_pipline_triggered";
 		}
 	}
-	
+
 	private String getNewApp(GitHubHook hook) {
 		Git git = new Git(System.getenv("PRODUCT_REPO"));
-		String url = "https://raw.githubusercontent.com/" + git.uri() + "/" + git.org() + "/master/src/boost/openshift/vars/microservices.yml";
+		String url = "https://raw.githubusercontent.com/" + git.uri() + "/" + git.org()
+				+ "/master/src/boost/openshift/vars/microservices.yml";
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(new URL(url).openStream());
