@@ -141,6 +141,7 @@ public class ProductService {
 		return client.getRoute(product.getProductId()).getServiceName().startsWith(name);
 	}
 
+	@Transactional
 	public Product update(Product product) {
 		Product saved = productDAO.getProduct(product.getProductId());
 		if (saved != null) {
