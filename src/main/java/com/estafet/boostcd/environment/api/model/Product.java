@@ -30,7 +30,7 @@ public class Product {
 	@Column(name = "REPO", nullable = false)
     private String repo;
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Env> envs = new ArrayList<Env>();
 
     public String getProductId() {
