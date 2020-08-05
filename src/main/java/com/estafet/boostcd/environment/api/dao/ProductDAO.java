@@ -17,7 +17,7 @@ public class ProductDAO {
 		
 	@SuppressWarnings("unchecked")
 	public List<Product> getProducts() {
-		return entityManager.createQuery("Select p from Environments p").getResultList();
+		return entityManager.createQuery("Select p from Product p").getResultList();
 	}
 	
 	public Product getProduct(String productId) {
