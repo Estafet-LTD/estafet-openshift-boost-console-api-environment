@@ -1,5 +1,7 @@
 package com.estafet.boostcd.environment.api.scheduled;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import com.estafet.boostcd.environment.api.service.ProductService;
 public class EnvScheduler {
 
 	private static final Logger log = LoggerFactory.getLogger(EnvScheduler.class);
-
+	
 	@Autowired
 	private ProductService productService;
 
@@ -23,11 +25,14 @@ public class EnvScheduler {
 
 	@Scheduled(fixedRate = 30000)
 	public void execute() {
-		log.info("refreshing environment data");
-		for (Product product : productService.update()) {
-			environmentsProducer.sendMessage(product.getEnvironments());
+		List<Product> products = productService.update();
+		if (!products.isEmpty()) {
+			for (Product product : products) {
+				environmentsProducer.sendMessage(product.getEnvironments());
+			}	
+		} else {
+			log.warn("no updates");
 		}
-		log.info("environment data refreshed");
 	}
 
 }
