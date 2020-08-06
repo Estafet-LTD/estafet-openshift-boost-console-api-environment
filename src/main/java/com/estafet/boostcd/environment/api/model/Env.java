@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.estafet.boostcd.commons.date.DateUtils;
 import com.estafet.openshift.boost.messages.environments.Environment;
@@ -24,7 +25,8 @@ import com.estafet.openshift.boost.messages.environments.EnvironmentApp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Env")
+@Table(name = "Env", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "PRODUCT_ID", "ENV_NAME" }, name = "ENV_PRODUCT_KEY") })
 public class Env {
 
 	@Id
