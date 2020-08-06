@@ -105,6 +105,7 @@ public class Product {
 	public Environments getEnvironments() {
 		Environments environments = Environments.builder()
 				.setProductId(productId)
+				.setRepo(repo)
 				.build();
 		for (Env env : envs) {
 			environments.addEnvironment(env.getEnvironment());
