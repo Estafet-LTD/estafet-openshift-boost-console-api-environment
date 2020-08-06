@@ -1,3 +1,0 @@
-setup:
-  - name: update-product
-  - name: boost-services-cleanup
