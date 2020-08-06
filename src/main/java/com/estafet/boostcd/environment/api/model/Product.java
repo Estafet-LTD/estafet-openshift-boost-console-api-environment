@@ -81,9 +81,23 @@ public class Product {
 		return this;
     }
 	
+	public Env getEnv(String name) {
+		for (Env env : envs) {
+			if (env.getName().equals(name)) {
+				return env;
+			}
+		}
+		return null;
+	}
+	
 	public Product addEnvs(List<Env> envs) {
 		for (Env env : envs) {
-			addEnv(env);
+			Env savedEnv = getEnv(env.getName());
+			if (savedEnv != null) {
+				savedEnv.merge(env);
+			} else {
+				addEnv(env);	
+			}
 		}
 		return this;
 	}

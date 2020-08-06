@@ -45,7 +45,9 @@ public class ProductService {
 	public List<Product> update() {
 		List<Product> products = new ArrayList<Product>();
 		for (Product product : productDAO.getProducts()) {
-			products.add(product.addEnvs(getEnvs(product)));
+			product.addEnvs(getEnvs(product));
+			productDAO.update(product);
+			products.add(product);
 		}
 		return products;
 	}

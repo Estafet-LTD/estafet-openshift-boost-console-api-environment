@@ -21,15 +21,5 @@ public class EnvDAO {
 		List<Env> envs = query.setParameter("env", env).setParameter("productId", productId).getResultList();
 		return !envs.isEmpty() ? envs.get(0) : null;
 	}
-
-	public Env update(Env env) {
-		entityManager.merge(env);
-		return env;
-	}
-
-	public Env create(Env env) {
-		entityManager.persist(env);
-		return env;
-	}
 	
 }
