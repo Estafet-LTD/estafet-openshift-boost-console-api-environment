@@ -1,5 +1,5 @@
 setup:
-  - name: create-postgres-db
+  - name: boostcd.create_postgres_db
     app: environment-api
     repo: environment-api
     reset_db: true
