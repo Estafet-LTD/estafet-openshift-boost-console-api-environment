@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.estafet.boostcd.commons.env.ENV;
 import com.estafet.boostcd.environment.api.dao.ProductDAO;
+import com.estafet.boostcd.environment.api.jms.DeleteProductProducer;
 import com.estafet.boostcd.environment.api.model.App;
 import com.estafet.boostcd.environment.api.model.AppFactory;
 import com.estafet.boostcd.environment.api.model.Env;
@@ -35,6 +36,9 @@ public class ProductService {
 
 	@Autowired
 	private ProductDAO productDAO;
+	
+	@Autowired
+	private DeleteProductProducer deleteProductProducer;
 
 	@Transactional(readOnly = true)
 	public List<Product> getProducts() {
@@ -156,6 +160,15 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public Product getProduct(String product) {
 		return productDAO.getProduct(product);
+	}
+
+	@Transactional
+	public Product deleteProduct(String productId) {
+		Product product = productDAO.deleteProduct(productId);
+		if (product != null) {
+			deleteProductProducer.sendMessage(product.getEnvironments());	
+		}
+		return product;
 	}
 
 }
