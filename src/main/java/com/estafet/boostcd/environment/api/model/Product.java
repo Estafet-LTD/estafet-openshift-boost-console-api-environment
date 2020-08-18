@@ -72,6 +72,7 @@ public class Product {
 	public Product merge(Product updated) {
 		this.version = updated.version;
 		this.description = updated.description;
+		this.repo = updated.repo;
 		return this;
 	}
 	
