@@ -8,7 +8,13 @@ public class VersionComparator implements Comparator<String> {
 	public int compare(String version1, String version2) {
 		String[] v1 = version1.replaceAll("\\-SNAPSHOT", "").split("\\.");
 		String[] v2 = version2.replaceAll("\\-SNAPSHOT", "").split("\\.");
-		if (major(v1) == major(v2)) {
+		if (version1.equals("master")) {
+			return 1;
+		} else if (version2.equals("master")) {
+			return -1;
+		} else if (version1.equals(version2)) {
+			return 0;
+		} else if (major(v1) == major(v2)) {
 			if (minor(v1) ==  minor(v2)) {
 				return revision(v1).compareTo(revision(v2));
 			} else {
