@@ -54,20 +54,19 @@ public class GitHubService {
 				}
 
 			}
-			String app = getNewApp(hook);
-			if (app != null) {
-				for (Product product : productDAO.getProducts()) {
-					client.executeBuildPipeline(product.getProductId(), product.getRepo(), app,
-							hook.getRepository().getHtmlUrl());
-					return "build_success";
-				}
-
+			for (Product product : productDAO.getProducts()) {
+				client.executeBuildPipeline(
+						product.getProductId(), 
+						product.getRepo(), 
+						getNewApp(hook, product.getRepo()),
+						hook.getRepository().getHtmlUrl());
+				return "build_success";
 			}
 			return "no_pipline_triggered";
 		}
 	}
 
-	private String getNewApp(GitHubHook hook) {
+	private String getNewApp(GitHubHook hook, String productRepo) {
 		Git git = new Git(System.getenv("PRODUCT_REPO"));
 		String url = "https://raw.githubusercontent.com/" + git.uri() + "/" + git.org()
 				+ "/master/src/boost/openshift/definitions/microservices.yml";
