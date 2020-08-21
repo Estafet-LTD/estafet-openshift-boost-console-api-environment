@@ -74,7 +74,7 @@ public class GitHubService {
 			Microservices microservices = mapper.readValue(in, Microservices.class);
 			for (Microservice microservice : microservices.getMicroservices()) {
 				if (microservice.getRepo().replaceAll("\\.git", "")
-						.equals(hook.getRepository().getName().replaceAll("\\.git", ""))) {
+						.equals(hook.getRepository().getUrl())) {
 					return microservice.getName();
 				}
 			}
