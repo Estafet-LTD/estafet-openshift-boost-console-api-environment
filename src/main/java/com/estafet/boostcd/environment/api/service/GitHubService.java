@@ -68,7 +68,7 @@ public class GitHubService {
 
 	private String getNewApp(GitHubHook hook, String productRepo) {
 		Git git = new Git(productRepo);
-		String url = "https://raw.githubusercontent.com/" + git.uri() + "/" + git.org()
+		String url = "https://raw.githubusercontent.com/" + git.org() + "/" + git.uri()
 				+ "/master/src/boost/openshift/definitions/microservices.yml";
 		BufferedInputStream in = null;
 		try {
