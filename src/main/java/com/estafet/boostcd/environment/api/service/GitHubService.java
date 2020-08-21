@@ -55,11 +55,8 @@ public class GitHubService {
 
 			}
 			for (Product product : productDAO.getProducts()) {
-				client.executeBuildPipeline(
-						product.getProductId(), 
-						product.getRepo(), 
-						getNewApp(hook, product.getRepo()),
-						hook.getRepository().getHtmlUrl());
+				client.executeBuildPipeline(product.getProductId(), product.getRepo(),
+						getNewApp(hook, product.getRepo()), hook.getRepository().getHtmlUrl());
 				return "build_success";
 			}
 			return "no_pipline_triggered";
@@ -76,11 +73,12 @@ public class GitHubService {
 			ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 			Microservices microservices = mapper.readValue(in, Microservices.class);
 			for (Microservice microservice : microservices.getMicroservices()) {
-				if (microservice.getRepo().equals(hook.getRepository().getName())) {
+				if (microservice.getRepo().replaceAll("\\.git", "")
+						.equals(hook.getRepository().getName().replaceAll("\\.git", ""))) {
 					return microservice.getName();
 				}
 			}
-			return null;
+			throw new RuntimeException("Cannot match app for repo - " + productRepo);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
