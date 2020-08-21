@@ -70,7 +70,7 @@ public class GitHubService {
 	private String getNewApp(GitHubHook hook) {
 		Git git = new Git(System.getenv("PRODUCT_REPO"));
 		String url = "https://raw.githubusercontent.com/" + git.uri() + "/" + git.org()
-				+ "/master/src/boost/openshift/vars/microservices.yml";
+				+ "/master/src/boost/openshift/definitions/microservices.yml";
 		BufferedInputStream in = null;
 		try {
 			in = new BufferedInputStream(new URL(url).openStream());
