@@ -78,7 +78,7 @@ public class GitHubService {
 					return microservice.getName();
 				}
 			}
-			throw new RuntimeException("Cannot match app for repo - " + productRepo);
+			throw new RuntimeException("Cannot match app for repo - " + hook.getRepository().getUrl());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {
